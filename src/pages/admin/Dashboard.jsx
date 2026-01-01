@@ -14,6 +14,17 @@ export default function Dashboard() {
     fetchProjects()
   }, [])
 
+  const fetchProjects = async () => {
+    try {
+      const data = await getProjects()
+      setProjects(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleDelete = async (e, id, title) => {
     e.preventDefault()
     e.stopPropagation()
