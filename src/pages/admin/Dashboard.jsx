@@ -3,7 +3,8 @@ import { Link } from "react-router-dom"
 import { getProjects } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
-import { Plus, Users, Calendar, ArrowRight } from "lucide-react"
+import { Plus, Users, Calendar, ArrowRight, Trash2 } from "lucide-react"
+import { deleteProject } from "../../lib/api"
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
@@ -13,14 +14,16 @@ export default function Dashboard() {
     fetchProjects()
   }, [])
 
-  const fetchProjects = async () => {
-    try {
-      const data = await getProjects()
-      setProjects(data)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
+  const handleDelete = async (e, id, title) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`)) {
+      try {
+        await deleteProject(id)
+        fetchProjects()
+      } catch (error) {
+        alert("刪除專案時發生錯誤: " + error.message)
+      }
     }
   }
 
@@ -58,8 +61,18 @@ export default function Dashboard() {
           {projects.map(project => (
             <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-neutral-200/60">
               <div className="h-3 w-full" style={{ backgroundColor: project.theme_color }}></div>
-              <CardHeader className="pb-3">
-                <CardTitle className="truncate text-xl text-neutral-800">{project.title}</CardTitle>
+              <CardHeader className="pb-3 relative">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="truncate text-xl text-neutral-800 pr-8">{project.title}</CardTitle>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-neutral-400 hover:text-red-600 hover:bg-red-50 -mt-1 -mr-1"
+                    onClick={(e) => handleDelete(e, project.id, project.title)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
                 <CardDescription className="line-clamp-2 min-h-[40px] mt-2 text-neutral-500">{project.description}</CardDescription>
               </CardHeader>
               <CardContent>

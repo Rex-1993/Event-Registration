@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
-import { useParams, Link } from "react-router-dom"
-import { getProject, getRegistrations } from "../../lib/api"
+import { getProject, getRegistrations, deleteProject } from "../../lib/api"
+import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
-import { Loader2, Download, QrCode, ArrowLeft } from "lucide-react"
+import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink } from "lucide-react"
 import * as XLSX from "xlsx"
 import { QRCodeCanvas } from "qrcode.react"
 
 export default function ProjectDetails() {
+  const navigate = useNavigate()
   const { id } = useParams()
   const [project, setProject] = useState(null)
   const [registrations, setRegistrations] = useState([])
@@ -47,13 +48,15 @@ export default function ProjectDetails() {
       
       // Dynamic fields
       // We should order them based on project fields config if possible, but map is easy
-      Object.keys(reg.data).forEach(key => {
-        // Find label if possible, else use key (which is ID). 
-        // Ideally we map ID to Label using project.fields
-        const fieldConfig = project.fields.find(f => f.id === key)
-        const label = fieldConfig ? fieldConfig.label : key
-        row[label] = reg.data[key]
-      })
+      if (reg.data) {
+        Object.keys(reg.data).forEach(key => {
+          // Find label if possible, else use key (which is ID). 
+          // Ideally we map ID to Label using project.fields
+          const fieldConfig = (project.fields || []).find(f => f.id === key)
+          const label = fieldConfig ? fieldConfig.label : key
+          row[label] = reg.data[key]
+        })
+      }
       
       return row
     })
@@ -62,6 +65,17 @@ export default function ProjectDetails() {
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, "Registrations")
     XLSX.writeFile(wb, `${project.title}_registrations.xlsx`)
+  }
+
+  const handleDelete = async () => {
+    if (confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`)) {
+      try {
+        await deleteProject(id)
+        navigate("/admin/projects")
+      } catch (error) {
+        alert("刪除專案時發生錯誤: " + error.message)
+      }
+    }
   }
 
   const publicUrl = `${window.location.origin}/#/event/${id}`
@@ -109,7 +123,15 @@ export default function ProjectDetails() {
             <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
               <QRCodeCanvas value={publicUrl} size={200} />
             </div>
-            <p className="mt-2 text-sm text-neutral-400 break-all text-center select-all">{publicUrl}</p>
+            <a 
+              href={publicUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="mt-2 text-sm text-primary-600 hover:text-primary-700 break-all text-center flex items-center gap-1.5 font-medium group"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              {publicUrl}
+            </a>
             <p className="text-lg font-bold mt-4 text-neutral-800">掃描 QR Code 進行報名</p>
          </Card>
        )}
@@ -126,15 +148,15 @@ export default function ProjectDetails() {
                  <tr>
                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
                    {/* Show first 3-4 fields dynamically */}
-                   {project.fields.slice(0, 4).map(f => (
-                     <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label}</th>
+                   {(project.fields || []).slice(0, 4).map(f => (
+                     <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label || f.id}</th>
                    ))}
                  </tr>
                </thead>
                <tbody className="divide-y divide-neutral-100">
                  {registrations.length === 0 ? (
                    <tr>
-                     <td colSpan={project.fields.length + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
+                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
                    </tr>
                  ) : (
                    registrations.map(reg => (
@@ -142,9 +164,9 @@ export default function ProjectDetails() {
                        <td className="p-4 text-neutral-600 whitespace-nowrap">
                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                        </td>
-                       {project.fields.slice(0, 4).map(f => (
+                       {(project.fields || []).slice(0, 4).map(f => (
                          <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
-                           {reg.data[f.id] || '-'}
+                           {reg.data?.[f.id] || '-'}
                          </td>
                        ))}
                      </tr>
