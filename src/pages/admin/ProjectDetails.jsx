@@ -64,78 +64,83 @@ export default function ProjectDetails() {
 
   const publicUrl = `${window.location.origin}/#/event/${id}`
 
-  if (loading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin" /></div>
-  if (!project) return <div className="p-10 text-center">Project not found</div>
+  if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
+  if (!project) return <div className="p-20 text-center text-neutral-500">找不到專案</div>
 
   return (
-    <div className="space-y-6">
-       <Link to="/admin/projects" className="text-morandi-muted hover:text-morandi-dark flex items-center gap-2">
-         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+    <div className="space-y-8 animate-in fade-in duration-500 pb-12">
+       <Link to="/admin/projects" className="text-neutral-500 hover:text-primary-600 flex items-center gap-2 transition-colors">
+         <ArrowLeft className="w-4 h-4" /> 返回專案列表
        </Link>
 
-       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-neutral-200 pb-8">
          <div>
-           <h1 className="text-3xl font-bold text-morandi-dark">{project.title}</h1>
-           <p className="text-morandi-muted">
-             {registrations.length} / {project.max_participants} Participants
+           <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
+           <p className="text-neutral-500 mt-2 text-lg">
+             <span className="font-semibold text-primary-600">{registrations.length}</span> / {project.max_participants} 已報名
            </p>
          </div>
-         <div className="flex gap-2">
-           <Button variant="outline" onClick={() => setShowQR(!showQR)}>
+         <div className="flex gap-3">
+           <Button variant="outline" onClick={() => setShowQR(!showQR)} className="shadow-sm hover:bg-neutral-50">
              <QrCode className="w-4 h-4 mr-2" />
-             {showQR ? "Hide QR" : "Show QR"}
+             {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
            </Button>
-           <Button onClick={handleExport}>
+           <Button onClick={handleExport} className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
              <Download className="w-4 h-4 mr-2" />
-             Export Excel
+             匯出 Excel
            </Button>
          </div>
        </div>
 
        {showQR && (
-         <Card className="bg-white p-6 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4">
-            <QRCodeCanvas value={publicUrl} size={150} />
-            <p className="mt-4 text-sm text-morandi-muted text-center break-all">{publicUrl}</p>
-            <p className="text-sm font-medium mt-2">Scan to Register</p>
+         <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
+            <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
+              <QRCodeCanvas value={publicUrl} size={200} />
+            </div>
+            <p className="mt-2 text-sm text-neutral-400 break-all text-center select-all">{publicUrl}</p>
+            <p className="text-lg font-bold mt-4 text-neutral-800">掃描 QR Code 進行報名</p>
          </Card>
        )}
 
-       <Card>
-         <CardHeader>
-           <CardTitle>Registrations</CardTitle>
+       <Card className="shadow-lg overflow-hidden border-t-0">
+         <CardHeader className="bg-neutral-50/50 border-b border-neutral-100">
+           <CardTitle className="text-xl">報名資料列表</CardTitle>
+           <CardDescription>顯示所有已報名的參加者資料</CardDescription>
          </CardHeader>
-         <CardContent className="overflow-x-auto">
-           <table className="w-full text-sm text-left">
-             <thead className="bg-morandi-cream/50 text-morandi-dark uppercase font-medium">
-               <tr>
-                 <th className="p-3 rounded-tl-lg">Date</th>
-                 {/* Show first 3-4 fields dynamically */}
-                 {project.fields.slice(0, 4).map(f => (
-                   <th key={f.id} className="p-3">{f.label}</th>
-                 ))}
-               </tr>
-             </thead>
-             <tbody>
-               {registrations.length === 0 ? (
+         <CardContent className="p-0">
+           <div className="overflow-x-auto">
+             <table className="w-full text-sm text-left">
+               <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
                  <tr>
-                   <td colSpan={project.fields.length + 1} className="p-6 text-center text-morandi-muted">No registrations yet</td>
+                   <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
+                   {/* Show first 3-4 fields dynamically */}
+                   {project.fields.slice(0, 4).map(f => (
+                     <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label}</th>
+                   ))}
                  </tr>
-               ) : (
-                 registrations.map(reg => (
-                   <tr key={reg.id} className="border-b border-morandi-grey/10 hover:bg-morandi-cream/20">
-                     <td className="p-3">
-                       {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleDateString() : '-'}
-                     </td>
-                     {project.fields.slice(0, 4).map(f => (
-                       <td key={f.id} className="p-3 max-w-[200px] truncate">
-                         {reg.data[f.id] || '-'}
-                       </td>
-                     ))}
+               </thead>
+               <tbody className="divide-y divide-neutral-100">
+                 {registrations.length === 0 ? (
+                   <tr>
+                     <td colSpan={project.fields.length + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
                    </tr>
-                 ))
-               )}
-             </tbody>
-           </table>
+                 ) : (
+                   registrations.map(reg => (
+                     <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
+                       <td className="p-4 text-neutral-600 whitespace-nowrap">
+                         {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
+                       </td>
+                       {project.fields.slice(0, 4).map(f => (
+                         <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
+                           {reg.data[f.id] || '-'}
+                         </td>
+                       ))}
+                     </tr>
+                   ))
+                 )}
+               </tbody>
+             </table>
+           </div>
          </CardContent>
        </Card>
     </div>

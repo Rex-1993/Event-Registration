@@ -4,11 +4,11 @@ import { Loader2 } from "lucide-react"
 
 const Button = React.forwardRef(({ className, variant = "default", size = "default", isLoading, children, ...props }, ref) => {
   const variants = {
-    default: "bg-morandi-sage text-white hover:opacity-90 shadow-sm",
-    secondary: "bg-morandi-rose text-white hover:opacity-90 shadow-sm",
-    outline: "border border-morandi-slate text-morandi-slate hover:bg-morandi-slate/10",
-    ghost: "text-morandi-dark hover:bg-morandi-grey/20",
-    danger: "bg-red-400 text-white hover:opacity-90"
+    default: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm hover:shadow-md",
+    secondary: "bg-secondary-500 text-white hover:bg-secondary-600 shadow-sm hover:shadow-md",
+    outline: "border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300",
+    ghost: "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
+    danger: "bg-red-500 text-white hover:bg-red-600 shadow-sm hover:shadow-md"
   }
 
   const sizes = {
@@ -21,7 +21,7 @@ const Button = React.forwardRef(({ className, variant = "default", size = "defau
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-morandi-sage focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
         variants[variant],
         sizes[size],
         className

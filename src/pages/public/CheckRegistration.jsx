@@ -33,54 +33,62 @@ export default function CheckRegistration() {
     }
   }
 
-  if (!project) return <div className="p-10 text-center"><div className="animate-spin h-6 w-6 border-2 border-morandi-sage border-t-transparent rounded-full mx-auto"/></div>
+  if (!project) return <div className="p-10 text-center"><div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full mx-auto"/></div>
 
   return (
-    <div className="space-y-6">
-      <Link to={`/event/${id}`} className="flex items-center text-morandi-muted hover:text-morandi-dark text-sm mb-4">
-        <ArrowLeft className="w-4 h-4 mr-1" /> Back to Registration
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <Link to={`/event/${id}`} className="flex items-center text-neutral-500 hover:text-primary-600 text-sm mb-4 transition-colors">
+        <ArrowLeft className="w-4 h-4 mr-1" /> 返回報名頁面
       </Link>
 
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-morandi-dark">{project.title}</h1>
-        <p className="text-morandi-muted">Check Registration Status</p>
+      <div className="text-center mb-8 space-y-2">
+        <h1 className="text-3xl font-bold text-neutral-900">{project.title}</h1>
+        <p className="text-neutral-500">報名狀態查詢</p>
       </div>
 
-      <Card>
+      <Card className="max-w-md mx-auto shadow-lg border-t-4 border-primary-500">
         <CardHeader>
-          <CardTitle>Search Registration</CardTitle>
-          <CardDescription>Enter your exact name to check if you are registered.</CardDescription>
+          <CardTitle>查詢報名資料</CardTitle>
+          <CardDescription>請輸入您的完整姓名以查詢是否已報名成功。</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSearch} className="flex gap-2">
             <Input 
-              placeholder="Enter your name (e.g. 王小明)" 
+              placeholder="請輸入姓名 (例如: 王小明)" 
               value={name} 
               onChange={e => setName(e.target.value)}
               required
+              className="flex-1"
             />
-            <Button type="submit" isLoading={loading}>
-              <Search className="w-4 h-4" />
+            <Button type="submit" isLoading={loading} className="px-6">
+              <Search className="w-5 h-5" />
             </Button>
           </form>
 
           {results && (
-            <div className="mt-6 space-y-4">
-              <h3 className="font-medium text-morandi-dark">Search Results:</h3>
+            <div className="mt-8 space-y-4 animate-in slide-in-from-bottom-2">
+              <h3 className="font-medium text-neutral-900 flex items-center gap-2">
+                查詢結果:
+              </h3>
               {results.length === 0 ? (
-                <div className="p-4 bg-morandi-grey/10 rounded-lg text-morandi-muted text-center">
-                  No registration found for "{name}"
+                <div className="p-6 bg-neutral-50 rounded-xl text-neutral-500 text-center border border-dashed border-neutral-200">
+                  找不到 "{name}" 的報名資料
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {results.map((res, index) => (
-                     <div key={index} className="flex items-center justify-between p-4 bg-green-50 border border-green-100 rounded-lg text-green-800">
-                        <div className="flex items-center gap-2">
-                           <UserCheck className="w-5 h-5" />
-                           <span className="font-bold">{res.name}</span>
-                        </div>
-                        <span className="text-sm opacity-80">{res.registered_at}</span>
-                     </div>
+                    <div key={index} className="flex items-center justify-between p-4 bg-green-50/50 border border-green-200 rounded-xl text-green-800 shadow-sm">
+                       <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-100 rounded-full">
+                            <UserCheck className="w-5 h-5 text-green-600" />
+                          </div>
+                          <div>
+                            <span className="font-bold block text-lg">{res.name}</span>
+                            <span className="text-xs text-green-600/80">已報名成功</span>
+                          </div>
+                       </div>
+                       <span className="text-sm font-medium bg-white/50 px-2 py-1 rounded-md border border-green-100/50">{res.registered_at}</span>
+                    </div>
                   ))}
                 </div>
               )}

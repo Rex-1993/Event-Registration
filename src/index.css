@@ -4,11 +4,23 @@
 
 @layer base {
   body {
-    @apply bg-morandi-cream text-morandi-dark antialiased;
+    @apply bg-neutral-50 text-neutral-800 antialiased selection:bg-primary-100 selection:text-primary-900;
   }
 }
 
-/* Custom scrollbar for webkit */
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  .glass-dark {
+    @apply bg-neutral-900/70 backdrop-blur-md border border-white/10 shadow-lg;
+  }
+  .card-gradient {
+    @apply bg-gradient-to-br from-white to-neutral-50;
+  }
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -17,8 +29,5 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-morandi-grey rounded-full;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-morandi-sage;
+  @apply bg-neutral-300 rounded-full transition-colors hover:bg-neutral-400;
 }

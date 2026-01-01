@@ -8,19 +8,19 @@ export default function RegistrationSuccess() {
   const projectTitle = state?.projectTitle || "Activity"
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
-      <div className="mb-6 rounded-full bg-green-100 p-6 text-green-600">
-        <CheckCircle className="h-12 w-12" />
+    <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center animate-in scale-in-95 duration-500">
+      <div className="mb-8 rounded-full bg-green-100 p-8 text-green-600 shadow-xl ring-8 ring-green-50 animate-bounce">
+        <CheckCircle className="h-16 w-16" />
       </div>
-      <h1 className="text-3xl font-bold text-morandi-dark mb-2">Registration Successful!</h1>
-      <p className="text-morandi-muted mb-8 max-w-md">
-        You have successfully registered for <strong>{projectTitle}</strong>.
-        We look forward to seeing you there!
+      <h1 className="text-4xl font-extrabold text-neutral-900 mb-4 tracking-tight">報名成功！</h1>
+      <p className="text-neutral-600 mb-10 max-w-lg text-lg leading-relaxed">
+        您已成功報名 <strong>{projectTitle}</strong>。<br/>
+        我們期待您的參與！
       </p>
       
       <div className="space-x-4">
         <Link to="/">
-          <Button variant="outline">Back to Home</Button>
+          <Button variant="outline" className="h-12 px-8 text-lg hover:bg-neutral-50 shadow-sm">返回首頁</Button>
         </Link>
       </div>
     </div>

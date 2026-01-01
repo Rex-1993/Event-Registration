@@ -62,42 +62,46 @@ export default function EventRegistration() {
      }))
   }
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-morandi-sage" /></div>
-  if (!project) return <div className="text-center py-20">Project not found</div>
+  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
+  if (!project) return <div className="text-center py-20 text-neutral-500">找不到專案</div>
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-morandi-dark">{project.title}</h1>
-        <div 
-          className="h-2 w-24 mx-auto rounded-full" 
-          style={{ backgroundColor: project.theme_color }}
-        />
-        <p className="text-morandi-muted max-w-lg mx-auto whitespace-pre-line">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-12">
+      <div className="text-center space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
+          <div 
+            className="h-1.5 w-24 mx-auto rounded-full shadow-sm" 
+            style={{ backgroundColor: project.theme_color }}
+          />
+        </div>
+        <p className="text-neutral-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed text-lg">
            {project.description}
         </p>
 
         <Link to={`/event/${id}/check`}>
-          <Button variant="ghost" className="text-morandi-sage hover:text-morandi-sage/80 hover:bg-morandi-sage/10">
+          <Button variant="ghost" className="text-primary-600 hover:text-primary-700 hover:bg-primary-50">
             <Search className="w-4 h-4 mr-2" />
-            Check if I'm already registered
+            查詢是否已報名
           </Button>
         </Link>
       </div>
 
-      <Card className="max-w-xl mx-auto shadow-lg border-t-4" style={{ borderTopColor: project.theme_color }}>
-        <CardHeader>
-          <CardTitle>Registration Form</CardTitle>
-          <CardDescription>
+      <Card className="max-w-2xl mx-auto shadow-xl border-t-4 overflow-hidden" style={{ borderTopColor: project.theme_color }}>
+        <CardHeader className="bg-neutral-50/50 pb-8">
+          <CardTitle className="text-2xl">報名表單</CardTitle>
+          <CardDescription className="text-base mt-2">
              {isFull ? (
-               <span className="text-red-500 font-bold">Registration Full (名額已滿)</span>
+               <span className="text-red-600 font-bold flex items-center gap-2">
+                 ⚠️ 名額已滿，報名已截止
+               </span>
              ) : (
-               "Please fill in your details accurately."
+               "請準確填寫您的資料，標註 * 為必填欄位。"
              )}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="pt-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {project.fields.map(field => {
               const commonProps = {
                 required: field.required,
@@ -107,17 +111,17 @@ export default function EventRegistration() {
               }
 
               return (
-                <div key={field.id} className="space-y-2">
-                  <Label>
+                <div key={field.id} className="space-y-3 group">
+                  <Label className="text-base text-neutral-700 group-hover:text-primary-700 transition-colors">
                     {field.label}
-                    {field.required && <span className="text-red-400 ml-1">*</span>}
+                    {field.required && <span className="text-red-500 ml-1">*</span>}
                   </Label>
 
                   {field.type === "textarea" ? (
-                    <Textarea {...commonProps} />
+                    <Textarea {...commonProps} placeholder={`請輸入${field.label}...`} />
                   ) : field.type === "select" ? (
                     <Select {...commonProps}>
-                       <option value="">Select an option</option>
+                       <option value="">請選擇...</option>
                        {field.options.split(",").map(opt => (
                          <option key={opt.trim()} value={opt.trim()}>{opt.trim()}</option>
                        ))}
@@ -125,7 +129,7 @@ export default function EventRegistration() {
                   ) : field.type === "radio" ? (
                     <div className="flex flex-wrap gap-4 pt-1">
                       {field.options.split(",").map(opt => (
-                        <label key={opt.trim()} className="flex items-center space-x-2 cursor-pointer">
+                        <label key={opt.trim()} className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-neutral-50 transition-colors border border-transparent hover:border-neutral-200">
                           <input
                             type="radio"
                             name={field.id}
@@ -133,35 +137,46 @@ export default function EventRegistration() {
                             checked={formData[field.id] === opt.trim()}
                             onChange={(e) => handleChange(field.id, e.target.value)}
                             disabled={isFull}
-                            className="text-morandi-sage focus:ring-morandi-sage"
+                            className="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300"
                             required={field.required}
                           />
-                          <span className="text-sm text-morandi-dark">{opt.trim()}</span>
+                          <span className="text-sm text-neutral-700">{opt.trim()}</span>
                         </label>
                       ))}
                     </div>
                   ) : (
-                    <Input type={field.type} {...commonProps} />
+                    <Input type={field.type} {...commonProps} placeholder={`請輸入${field.label}...`} />
                   )}
                 </div>
               )
             })}
 
-            <Button 
-              type="submit" 
-              className="w-full text-lg h-12" 
-              style={{ backgroundColor: isFull ? undefined : project.theme_color }}
-              disabled={isFull || submitting}
-            >
-              {isFull ? "Registration Closed" : "Submit Registration"}
-            </Button>
+            <div className="pt-4">
+              <Button 
+                type="submit" 
+                className="w-full text-lg h-14 font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" 
+                style={{ backgroundColor: isFull ? undefined : project.theme_color }}
+                disabled={isFull || submitting}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    處理中...
+                  </>
+                ) : isFull ? (
+                  "報名已截止"
+                ) : (
+                  "確認送出報名"
+                )}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
       
-      <div className="text-center text-sm text-morandi-muted">
-         Organizer: {project.organizer}
-         {project.co_organizer && ` | Co-Organizer: ${project.co_organizer}`}
+      <div className="text-center text-sm text-neutral-400 font-medium">
+         主辦單位: {project.organizer}
+         {project.co_organizer && ` | 協辦單位: ${project.co_organizer}`}
       </div>
     </div>
   )

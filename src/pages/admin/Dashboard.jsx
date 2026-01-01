@@ -25,54 +25,57 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex justify-between items-end border-b border-neutral-200 pb-6">
         <div>
-           <h1 className="text-3xl font-bold text-morandi-dark">Projects</h1>
-           <p className="text-morandi-muted">Manage your activity registrations</p>
+           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">專案管理</h1>
+           <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
         </div>
         <Link to="/admin/projects/create">
-          <Button className="gap-2">
+          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
             <Plus className="w-4 h-4" />
-            Create Project
+            建立新專案
           </Button>
         </Link>
       </div>
 
       {loading ? (
-        <div className="text-center py-10 text-morandi-muted">Loading projects...</div>
+        <div className="text-center py-20 text-neutral-400 flex flex-col items-center">
+          <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full mb-4"></div>
+          載入專案中...
+        </div>
       ) : projects.length === 0 ? (
-        <Card className="text-center py-16">
+        <Card className="text-center py-20 border-dashed border-2 bg-neutral-50/50 shadow-none">
           <CardContent>
-             <p className="text-lg text-morandi-dark mb-4">No projects found</p>
+             <p className="text-xl text-neutral-500 mb-6 font-medium">目前沒有任何專案</p>
              <Link to="/admin/projects/create">
-                <Button variant="outline">Create your first project</Button>
+                <Button variant="outline" className="h-12 px-6">建立您的第一個專案</Button>
              </Link>
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map(project => (
-            <Card key={project.id} className="hover:shadow-md transition-shadow">
-              <div className="h-2 w-full rounded-t-xl" style={{ backgroundColor: project.theme_color }}></div>
-              <CardHeader>
-                <CardTitle className="truncate">{project.title}</CardTitle>
-                <CardDescription className="line-clamp-2 min-h-[40px]">{project.description}</CardDescription>
+            <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-neutral-200/60">
+              <div className="h-3 w-full" style={{ backgroundColor: project.theme_color }}></div>
+              <CardHeader className="pb-3">
+                <CardTitle className="truncate text-xl text-neutral-800">{project.title}</CardTitle>
+                <CardDescription className="line-clamp-2 min-h-[40px] mt-2 text-neutral-500">{project.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-4 text-sm text-morandi-muted mb-4">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>Max: {project.max_participants}</span>
+                <div className="flex items-center gap-4 text-sm text-neutral-500 mb-6 bg-neutral-50 p-3 rounded-lg">
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-primary-500" />
+                    <span>上限: {project.max_participants}</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                     <Calendar className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5">
+                     <Calendar className="w-4 h-4 text-primary-500" />
                      <span>{project.created_at ? new Date(project.created_at.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
                 <Link to={`/admin/projects/${project.id}`}>
-                  <Button variant="outline" className="w-full gap-2 group">
-                    View Details
+                  <Button variant="outline" className="w-full gap-2 group-hover:bg-primary-50 group-hover:text-primary-700 group-hover:border-primary-200 transition-colors">
+                    查看詳情
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>

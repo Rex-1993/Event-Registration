@@ -12,38 +12,38 @@ const TEMPLATES = {
   singing: {
     label: "Singing Contest (歌唱比賽)",
     fields: [
-      { id: "1", label: "Name (姓名)", type: "text", required: true },
-      { id: "2", label: "Gender (性別)", type: "radio", options: "Male, Female", required: true },
-      { id: "3", label: "Song Title (歌名)", type: "text", required: true },
-      { id: "4", label: "Original Singer (原唱)", type: "text", required: true },
-      { id: "5", label: "Song No. (歌曲編號)", type: "text", required: false },
-      { id: "6", label: "Key (升降调)", type: "select", options: "Original, +1, +2, -1, -2", required: true },
-      { id: "7", label: "Phone (電話)", type: "text", required: true },
-      { id: "8", label: "Meal (便當)", type: "radio", options: "Meat, Veg", required: true },
-      { id: "9", label: "Karaoke Brand (伴唱機)", type: "select", options: "弘音, 音圓, 金嗓, 瑞影, 美華", required: true },
+      { id: "1", label: "姓名", type: "text", required: true },
+      { id: "2", label: "性別", type: "radio", options: "男, 女", required: true },
+      { id: "3", label: "歌名", type: "text", required: true },
+      { id: "4", label: "原唱", type: "text", required: true },
+      { id: "5", label: "歌曲編號", type: "text", required: false },
+      { id: "6", label: "升降Key", type: "select", options: "原調, +1, +2, -1, -2", required: true },
+      { id: "7", label: "電話", type: "text", required: true },
+      { id: "8", label: "便當", type: "radio", options: "葷, 素", required: true },
+      { id: "9", label: "伴唱機品牌", type: "select", options: "弘音, 音圓, 金嗓, 瑞影, 美華", required: true },
     ]
   },
   tour: {
     label: "Bus Tour (遊覽車旅遊)",
     fields: [
-      { id: "1", label: "Name (姓名)", type: "text", required: true },
-      { id: "2", label: "ID Number (身分證字號)", type: "text", required: true },
-      { id: "3", label: "DOB (生日)", type: "date", required: true },
-      { id: "4", label: "Mobile (手機)", type: "text", required: true },
-      { id: "5", label: "Emergency Contact (緊急聯絡人/電話)", type: "text", required: true },
-      { id: "6", label: "Pickup Location (上車地點)", type: "radio", options: "Location A, Location B, Self", required: true },
-      { id: "7", label: "Room Type (房型)", type: "select", options: "2-person, 4-person, Single (+supp)", required: true },
-       { id: "8", label: "Dietary (用餐)", type: "radio", options: "Standard, Veg", required: true },
+      { id: "1", label: "姓名", type: "text", required: true },
+      { id: "2", label: "身分證字號", type: "text", required: true },
+      { id: "3", label: "生日", type: "date", required: true },
+      { id: "4", label: "手機", type: "text", required: true },
+      { id: "5", label: "緊急聯絡人/電話", type: "text", required: true },
+      { id: "6", label: "上車地點", type: "radio", options: "地點A, 地點B, 自行前往", required: true },
+      { id: "7", label: "房型", type: "select", options: "兩人房, 四人房, 單人房 (補差價)", required: true },
+       { id: "8", label: "用餐", type: "radio", options: "葷, 素", required: true },
     ]
   },
   assembly: {
     label: "Member Assembly (會員大會)",
     fields: [
-      { id: "1", label: "Member ID (會員編號)", type: "text", required: true },
-      { id: "2", label: "Name (姓名)", type: "text", required: true },
-      { id: "3", label: "Attendance (出席方式)", type: "radio", options: "In-person, Proxy, Absent", required: true },
-      { id: "4", label: "Uniform Size (衣服尺寸)", type: "select", options: "XS, S, M, L, XL, 2XL", required: true },
-      { id: "5", label: "Proposals (提案)", type: "textarea", required: false },
+      { id: "1", label: "會員編號", type: "text", required: true },
+      { id: "2", label: "姓名", type: "text", required: true },
+      { id: "3", label: "出席方式", type: "radio", options: "親自出席, 委託出席, 不克出席", required: true },
+      { id: "4", label: "衣服尺寸", type: "select", options: "XS, S, M, L, XL, 2XL", required: true },
+      { id: "5", label: "提案建議", type: "textarea", required: false },
     ]
   }
 }
@@ -62,7 +62,7 @@ export default function ProjectCreate() {
   })
 
   const loadTemplate = (key) => {
-    if (confirm("This will replace current fields. Continue?")) {
+    if (confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
       setFormData(prev => ({
         ...prev,
         fields: JSON.parse(JSON.stringify(TEMPLATES[key].fields)) // Deep copy
@@ -77,20 +77,23 @@ export default function ProjectCreate() {
       await createProject(formData)
       navigate("/admin/projects")
     } catch (error) {
-      alert("Error creating project: " + error.message)
+      alert("建立專案時發生錯誤: " + error.message)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-10">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-morandi-dark">Create New Project</h1>
-        <div className="space-x-2">
-           <span className="text-sm text-morandi-muted font-medium mr-2">Quick Start:</span>
+    <div className="space-y-8 max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-200 pb-6">
+        <div>
+           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">建立新專案</h1>
+           <p className="text-neutral-500 mt-1">設定活動詳情與報名表單</p>
+        </div>
+        <div className="flex items-center gap-3 bg-neutral-50 p-2 rounded-lg border border-neutral-200">
+           <span className="text-sm text-neutral-600 font-medium px-2">快速範本:</span>
            {Object.keys(TEMPLATES).map(key => (
-             <Button key={key} size="sm" variant="outline" type="button" onClick={() => loadTemplate(key)}>
+             <Button key={key} size="sm" variant="ghost" type="button" onClick={() => loadTemplate(key)} className="text-primary-600 hover:text-primary-700 hover:bg-white hover:shadow-sm transition-all text-xs sm:text-sm">
                {TEMPLATES[key].label.split(" ")[0]}
              </Button>
            ))}
@@ -98,56 +101,58 @@ export default function ProjectCreate() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Basic Settings</CardTitle>
+        <Card className="shadow-lg border-t-4 border-primary-500 overflow-hidden">
+          <CardHeader className="bg-neutral-50/50 pb-6">
+            <CardTitle className="text-xl text-neutral-800">基本設定</CardTitle>
+            <CardDescription>設定活動的基本資訊與外觀</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className="space-y-6 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label>Event Title</Label>
-                <Input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                <Label className="text-neutral-700">活動名稱 (Title)</Label>
+                <Input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="請輸入活動名稱" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                 <Label>Max Participants</Label>
-                 <Input type="number" required value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} />
+                 <Label className="text-neutral-700">人數上限 (Max Participants)</Label>
+                 <Input type="number" required value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                <Label>Organizer</Label>
-                <Input required value={formData.organizer} onChange={e => setFormData({...formData, organizer: e.target.value})} />
+                <Label className="text-neutral-700">主辦單位 (Organizer)</Label>
+                <Input required value={formData.organizer} onChange={e => setFormData({...formData, organizer: e.target.value})} placeholder="請輸入主辦單位" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                <Label>Co-Organizer</Label>
-                <Input value={formData.co_organizer} onChange={e => setFormData({...formData, co_organizer: e.target.value})} />
+                <Label className="text-neutral-700">協辦單位 (Co-Organizer)</Label>
+                <Input value={formData.co_organizer} onChange={e => setFormData({...formData, co_organizer: e.target.value})} placeholder="選填" className="focus:ring-primary-500" />
               </div>
             </div>
             
             <div className="space-y-2">
-               <Label>Description</Label>
-               <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+               <Label className="text-neutral-700">活動說明 (Description)</Label>
+               <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="請輸入活動詳細說明..." className="min-h-[120px] focus:ring-primary-500" />
             </div>
 
             <div className="space-y-2">
-               <Label>Theme Color</Label>
-               <div className="flex items-center gap-4">
+               <Label className="text-neutral-700">主題顏色 (Theme Color)</Label>
+               <div className="flex items-center gap-4 p-3 border border-neutral-200 rounded-lg bg-neutral-50/50">
                  <Input 
                    type="color" 
                    value={formData.theme_color} 
                    onChange={e => setFormData({...formData, theme_color: e.target.value})} 
-                   className="w-20 h-10 p-1"
+                   className="w-16 h-10 p-1 cursor-pointer hover:scale-105 transition-transform"
                  />
-                 <span className="text-sm text-morandi-muted">{formData.theme_color}</span>
+                 <span className="text-sm font-mono text-neutral-500 bg-white px-3 py-1 rounded border border-neutral-200">{formData.theme_color}</span>
+                 <div className="flex-1 h-2 rounded-full mx-4" style={{ backgroundColor: formData.theme_color }}></div>
                </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Registration Form</CardTitle>
-            <CardDescription>Customize the fields participants need to fill out.</CardDescription>
+        <Card className="shadow-lg border-t-4 border-secondary-500 overflow-hidden">
+          <CardHeader className="bg-neutral-50/50 pb-6">
+            <CardTitle className="text-xl text-neutral-800">報名表單設計</CardTitle>
+            <CardDescription>自訂參加者需要填寫的欄位</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <FormBuilder 
               value={formData.fields} 
               onChange={fields => setFormData({...formData, fields})}
@@ -155,9 +160,9 @@ export default function ProjectCreate() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-end gap-4">
-           <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")}>Cancel</Button>
-           <Button type="submit" isLoading={loading}>Create Project</Button>
+        <div className="flex justify-end gap-4 pt-4">
+           <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
+           <Button type="submit" isLoading={loading} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ backgroundColor: formData.theme_color || undefined }}>建立專案</Button>
         </div>
       </form>
     </div>

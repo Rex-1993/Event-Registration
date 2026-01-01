@@ -17,40 +17,43 @@ export default function Login() {
       localStorage.setItem("isAdmin", "true")
       navigate("/admin/projects")
     } else {
-      setError("Incorrect password")
+      setError("密碼錯誤")
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-morandi-cream p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 bg-morandi-sage/20 rounded-full flex items-center justify-center mb-2">
-            <Lock className="w-6 h-6 text-morandi-sage" />
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-primary-500">
+        <CardHeader className="text-center space-y-4 pb-2">
+          <div className="mx-auto w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mb-2 ring-8 ring-primary-50/50">
+            <Lock className="w-8 h-8 text-primary-600" />
           </div>
-          <CardTitle>Admin Login</CardTitle>
-          <CardDescription>Enter the access code to continue</CardDescription>
+          <div>
+            <CardTitle className="text-2xl font-bold text-neutral-900">管理員登入</CardTitle>
+            <CardDescription className="text-base text-neutral-500 mt-1">請輸入訪問代碼以繼續</CardDescription>
+          </div>
         </CardHeader>
         <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6 pt-6">
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-neutral-700">訪問代碼 (Password)</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter password"
+                placeholder="請輸入密碼..."
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
                   setError("")
                 }}
                 error={error}
+                className="h-12 text-lg tracking-widest"
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full">
-              Login
+          <CardFooter className="pb-8">
+            <Button type="submit" className="w-full h-12 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+              登入系統
             </Button>
           </CardFooter>
         </form>
