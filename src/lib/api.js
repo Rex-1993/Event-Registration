@@ -9,8 +9,9 @@ import {
   deleteDoc, 
   query, 
   where, 
-  orderBy, 
-  serverTimestamp
+  orderBy,
+  serverTimestamp,
+  writeBatch
 } from "firebase/firestore";
 
 const PROJECTS_COLLECTION = "projects";
@@ -70,9 +71,25 @@ export const updateProject = async (id, data) => {
 
 export const deleteProject = async (id) => {
   try {
-    await deleteDoc(doc(db, PROJECTS_COLLECTION, id));
+    const batch = writeBatch(db);
+    
+    // 1. Get all registrations for this project
+    const q = query(collection(db, REGISTRATIONS_COLLECTION), where("project_id", "==", id));
+    const regSnapshot = await getDocs(q);
+    
+    // 2. Add registration deletions to batch
+    regSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    
+    // 3. Add project deletion to batch
+    const projectRef = doc(db, PROJECTS_COLLECTION, id);
+    batch.delete(projectRef);
+    
+    // 4. Commit batch
+    await batch.commit();
   } catch (error) {
-    console.error("Error deleting project:", error);
+    console.error("Error deleting project and registrations:", error);
     throw error;
   }
 };
