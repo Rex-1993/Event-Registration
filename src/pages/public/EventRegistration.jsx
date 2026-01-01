@@ -75,7 +75,7 @@ export default function EventRegistration() {
             style={{ backgroundColor: project.theme_color }}
           />
         </div>
-        <p className="text-neutral-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed text-lg">
+        <p className="text-neutral-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed text-lg break-words px-2">
            {project.description}
         </p>
 
