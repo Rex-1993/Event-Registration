@@ -99,11 +99,15 @@ export const registerParticipant = async (projectId, registrationData) => {
     }
 
     // 2. Add registration
+    // Find name field for search indexing
+    const nameField = project.fields?.find(f => f.label === "姓名" || f.label === "Name") || project.fields?.[0]
+    const searchName = nameField ? (registrationData[nameField.id] || "") : ""
+
     const docRef = await addDoc(collection(db, REGISTRATIONS_COLLECTION), {
       project_id: projectId,
       data: registrationData,
       created_at: serverTimestamp(),
-      search_name: registrationData['name'] // Indexable name for search
+      search_name: searchName
     });
     return docRef.id;
   } catch (error) {
