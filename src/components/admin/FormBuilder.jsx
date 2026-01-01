@@ -7,14 +7,14 @@ import { Card, CardContent } from "../ui/Card"
 import { Plus, Trash2, GripVertical } from "lucide-react"
 
 const FIELD_TYPES = [
-  { value: "text", label: "簡短回答 (Short Text)" },
-  { value: "textarea", label: "詳答 (Paragraph)" },
-  { value: "number", label: "數字 (Number)" },
-  { value: "email", label: "電子郵件 (Email)" },
-  { value: "date", label: "日期 (Date)" },
-  { value: "select", label: "下拉式選單 (Dropdown)" },
-  { value: "radio", label: "單選題 (Radio)" },
-  { value: "checkbox", label: "多選題 (Checkbox)" },
+  { value: "text", label: "簡短回答" },
+  { value: "textarea", label: "詳細回答" },
+  { value: "number", label: "數字" },
+  { value: "email", label: "電子郵件" },
+  { value: "date", label: "日期" },
+  { value: "select", label: "下拉式選單" },
+  { value: "radio", label: "單選題" },
+  { value: "checkbox", label: "多選題" },
 ]
 
 export default function FormBuilder({ value = [], onChange }) {
@@ -60,7 +60,7 @@ export default function FormBuilder({ value = [], onChange }) {
             
             <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
               <div className="md:col-span-5 space-y-2">
-                <Label>標題 (Label)</Label>
+                <Label>標題</Label>
                 <Input 
                   value={field.label} 
                   onChange={(e) => updateField(field.id, { label: e.target.value })}
@@ -70,7 +70,7 @@ export default function FormBuilder({ value = [], onChange }) {
               </div>
 
               <div className="md:col-span-3 space-y-2">
-                <Label>類型 (Type)</Label>
+                <Label>類型</Label>
                 <Select
                   value={field.type}
                   onChange={(e) => updateField(field.id, { type: e.target.value })}
@@ -103,7 +103,7 @@ export default function FormBuilder({ value = [], onChange }) {
                       checked={field.required}
                       onChange={(e) => updateField(field.id, { required: e.target.checked })}
                     />
-                    必填 (Required)
+                    必填
                  </label>
               </div>
             </div>

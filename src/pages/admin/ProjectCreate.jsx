@@ -109,25 +109,25 @@ export default function ProjectCreate() {
           <CardContent className="space-y-6 pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="text-neutral-700">活動名稱 (Title)</Label>
+                <Label className="text-neutral-700">活動名稱</Label>
                 <Input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="請輸入活動名稱" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                 <Label className="text-neutral-700">人數上限 (Max Participants)</Label>
+                 <Label className="text-neutral-700">人數上限</Label>
                  <Input type="number" required value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                <Label className="text-neutral-700">主辦單位 (Organizer)</Label>
+                <Label className="text-neutral-700">主辦單位</Label>
                 <Input required value={formData.organizer} onChange={e => setFormData({...formData, organizer: e.target.value})} placeholder="請輸入主辦單位" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                <Label className="text-neutral-700">協辦單位 (Co-Organizer)</Label>
+                <Label className="text-neutral-700">協辦單位</Label>
                 <Input value={formData.co_organizer} onChange={e => setFormData({...formData, co_organizer: e.target.value})} placeholder="選填" className="focus:ring-primary-500" />
               </div>
             </div>
             
             <div className="space-y-2">
-               <Label className="text-neutral-700">活動說明 (Description)</Label>
+               <Label className="text-neutral-700">活動說明</Label>
                <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="請輸入活動詳細說明..." className="min-h-[120px] focus:ring-primary-500" />
             </div>
 
