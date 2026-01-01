@@ -39,6 +39,9 @@ export default function AdminLayout() {
             <LogOut className="w-5 h-5" />
             登出
           </Link>
+          <div className="mt-4 px-4 text-xs text-neutral-400 text-center">
+            System Version: v1.0.1 (CN)
+          </div>
         </div>
       </aside>
 
