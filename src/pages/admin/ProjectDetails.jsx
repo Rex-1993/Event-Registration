@@ -78,7 +78,7 @@ export default function ProjectDetails() {
     }
   }
 
-  const publicUrl = `${window.location.origin}/#/event/${id}`
+  const publicUrl = `${window.location.href.split('#')[0]}#/event/${id}`
 
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
   
