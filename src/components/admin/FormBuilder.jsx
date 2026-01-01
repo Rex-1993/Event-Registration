@@ -7,14 +7,14 @@ import { Card, CardContent } from "../ui/Card"
 import { Plus, Trash2, GripVertical } from "lucide-react"
 
 const FIELD_TYPES = [
-  { value: "text", label: "Short Text" },
-  { value: "textarea", label: "Paragraph" },
-  { value: "number", label: "Number" },
-  { value: "email", label: "Email" },
-  { value: "date", label: "Date" },
-  { value: "select", label: "Dropdown" },
-  { value: "radio", label: "Radio Buttons" },
-  { value: "checkbox", label: "Checkbox Group" },
+  { value: "text", label: "簡短回答 (Short Text)" },
+  { value: "textarea", label: "詳答 (Paragraph)" },
+  { value: "number", label: "數字 (Number)" },
+  { value: "email", label: "電子郵件 (Email)" },
+  { value: "date", label: "日期 (Date)" },
+  { value: "select", label: "下拉式選單 (Dropdown)" },
+  { value: "radio", label: "單選題 (Radio)" },
+  { value: "checkbox", label: "多選題 (Checkbox)" },
 ]
 
 export default function FormBuilder({ value = [], onChange }) {
@@ -27,7 +27,7 @@ export default function FormBuilder({ value = [], onChange }) {
   const addField = () => {
     const newField = {
       id: crypto.randomUUID(),
-      label: "New Field",
+      label: "新問題",
       type: "text",
       required: false,
       options: "" // For select/radio
@@ -52,26 +52,29 @@ export default function FormBuilder({ value = [], onChange }) {
   return (
     <div className="space-y-4">
       {fields.map((field) => (
-        <Card key={field.id} className="relative group">
+        <Card key={field.id} className="relative group hover:border-primary-200 transition-colors">
           <CardContent className="p-4 flex gap-4 items-start">
-            <div className="mt-3 text-morandi-grey/50 cursor-grab">
+            <div className="mt-3 text-neutral-400 cursor-move hover:text-primary-500">
               <GripVertical className="w-5 h-5" />
             </div>
             
             <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
               <div className="md:col-span-5 space-y-2">
-                <Label>Label</Label>
+                <Label>標題 (Label)</Label>
                 <Input 
                   value={field.label} 
                   onChange={(e) => updateField(field.id, { label: e.target.value })}
+                  placeholder="請輸入問題標題"
+                  className="focus:ring-primary-500"
                 />
               </div>
 
               <div className="md:col-span-3 space-y-2">
-                <Label>Type</Label>
+                <Label>類型 (Type)</Label>
                 <Select
                   value={field.type}
                   onChange={(e) => updateField(field.id, { type: e.target.value })}
+                  className="focus:ring-primary-500"
                 >
                   {FIELD_TYPES.map(t => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -82,24 +85,25 @@ export default function FormBuilder({ value = [], onChange }) {
               {/* Options field for select/radio/checkbox */}
               {["select", "radio", "checkbox"].includes(field.type) && (
                 <div className="md:col-span-4 space-y-2">
-                  <Label>Options (comma separated)</Label>
+                  <Label>選項 (以逗號分隔)</Label>
                   <Input 
                     value={field.options} 
-                    placeholder="Option A, Option B"
+                    placeholder="選項A, 選項B, 選項C"
                     onChange={(e) => updateField(field.id, { options: e.target.value })}
+                    className="focus:ring-primary-500"
                   />
                 </div>
               )}
               
               <div className="md:col-span-12 flex items-center gap-4 mt-2">
-                 <label className="flex items-center gap-2 text-sm text-morandi-dark cursor-pointer">
+                 <label className="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer hover:text-primary-600 transition-colors">
                     <input 
                       type="checkbox"
-                      className="rounded border-morandi-grey/30 text-morandi-sage focus:ring-morandi-sage"
+                      className="rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                       checked={field.required}
                       onChange={(e) => updateField(field.id, { required: e.target.checked })}
                     />
-                    Required
+                    必填 (Required)
                  </label>
               </div>
             </div>
@@ -107,7 +111,7 @@ export default function FormBuilder({ value = [], onChange }) {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="text-red-400 hover:text-red-600 hover:bg-red-50 mt-1"
+              className="text-neutral-400 hover:text-red-600 hover:bg-red-50 mt-1 transition-colors"
               onClick={() => removeField(field.id)}
             >
               <Trash2 className="w-4 h-4" />
@@ -116,9 +120,9 @@ export default function FormBuilder({ value = [], onChange }) {
         </Card>
       ))}
 
-      <Button onClick={addField} variant="outline" type="button" className="w-full border-dashed">
+      <Button onClick={addField} variant="outline" type="button" className="w-full border-dashed border-2 py-6 text-neutral-500 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50/50 transition-all">
         <Plus className="w-4 h-4 mr-2" />
-        Add Field
+        新增問題
       </Button>
     </div>
   )

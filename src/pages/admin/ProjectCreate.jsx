@@ -10,7 +10,7 @@ import FormBuilder from "../../components/admin/FormBuilder"
 
 const TEMPLATES = {
   singing: {
-    label: "Singing Contest (歌唱比賽)",
+    label: "歌唱比賽 (Singing Contest)",
     fields: [
       { id: "1", label: "姓名", type: "text", required: true },
       { id: "2", label: "性別", type: "radio", options: "男, 女", required: true },
@@ -24,7 +24,7 @@ const TEMPLATES = {
     ]
   },
   tour: {
-    label: "Bus Tour (遊覽車旅遊)",
+    label: "遊覽車旅遊 (Bus Tour)",
     fields: [
       { id: "1", label: "姓名", type: "text", required: true },
       { id: "2", label: "身分證字號", type: "text", required: true },
@@ -37,7 +37,7 @@ const TEMPLATES = {
     ]
   },
   assembly: {
-    label: "Member Assembly (會員大會)",
+    label: "會員大會 (Member Assembly)",
     fields: [
       { id: "1", label: "會員編號", type: "text", required: true },
       { id: "2", label: "姓名", type: "text", required: true },

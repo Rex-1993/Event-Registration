@@ -12,6 +12,7 @@ export default function ProjectDetails() {
   const [project, setProject] = useState(null)
   const [registrations, setRegistrations] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [showQR, setShowQR] = useState(false)
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function ProjectDetails() {
         setRegistrations(regData)
       } catch (error) {
         console.error(error)
+        setError(error.message)
       } finally {
         setLoading(false)
       }
@@ -65,7 +67,17 @@ export default function ProjectDetails() {
   const publicUrl = `${window.location.origin}/#/event/${id}`
 
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
-  if (!project) return <div className="p-20 text-center text-neutral-500">找不到專案</div>
+  
+  if (error) return (
+    <div className="p-20 text-center space-y-4">
+      <div className="text-red-500 text-xl font-bold">載入失敗</div>
+      <p className="text-neutral-500">{error}</p>
+      <p className="text-sm text-neutral-400">請確認您的權限設定或網際網路連線。</p>
+      <Link to="/admin/projects" className="text-primary-600 hover:underline">返回專案列表</Link>
+    </div>
+  )
+
+  if (!project) return <div className="p-20 text-center text-neutral-500">找不到專案 (ID: {id})<br/><span className="text-xs text-neutral-400">請確認專案是否存在或重新整理</span></div>
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
