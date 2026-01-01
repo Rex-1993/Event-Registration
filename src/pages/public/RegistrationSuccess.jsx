@@ -17,12 +17,6 @@ export default function RegistrationSuccess() {
         您已成功報名 <strong>{projectTitle}</strong>。<br/>
         我們期待您的參與！
       </p>
-      
-      <div className="space-x-4">
-        <Link to="/">
-          <Button variant="outline" className="h-12 px-8 text-lg hover:bg-neutral-50 shadow-sm">返回首頁</Button>
-        </Link>
-      </div>
     </div>
   )
 }
