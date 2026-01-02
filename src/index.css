@@ -1,1 +1,47 @@
 @import "tailwindcss";
+
+@theme {
+  /* Morandi Color Palette */
+  --color-primary-50: #f2f4f6;
+  --color-primary-100: #e3e7eb;
+  --color-primary-200: #c6d0d9;
+  --color-primary-300: #9badbd;
+  --color-primary-400: #7a8b99; /* Main Morandi Blue-Grey */
+  --color-primary-500: #637080;
+  --color-primary-600: #4d5866;
+  --color-primary-700: #3a424d;
+  --color-primary-800: #2a2f36;
+  --color-primary-900: #1c1f24;
+
+  --color-secondary-50: #fbf7f6;
+  --color-secondary-100: #f5eeec;
+  --color-secondary-200: #ebdcd9;
+  --color-secondary-300: #dcc0bc;
+  --color-secondary-400: #c4a69f; /* Main Morandi Dusty Rose */
+  --color-secondary-500: #a68076;
+  --color-secondary-600: #8a635a;
+  --color-secondary-700: #6e4b44;
+  --color-secondary-800: #523631;
+  --color-secondary-900: #38231f;
+
+  --color-accent-50: #f4f6f4;
+  --color-accent-100: #e6eae5;
+  --color-accent-200: #cbd5c9;
+  --color-accent-300: #aebfad;
+  --color-accent-400: #98a697; /* Morandi Sage Green */
+  --color-accent-500: #7a8a79;
+  --color-accent-600: #5e6b5d;
+  
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-primary-50 text-neutral-800 antialiased;
+  }
+  
+  /* Glassmorphism Utilities */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+}

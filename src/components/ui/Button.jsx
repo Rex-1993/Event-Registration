@@ -4,11 +4,11 @@ import { Loader2 } from "lucide-react"
 
 const Button = React.forwardRef(({ className, variant = "default", size = "default", isLoading, children, ...props }, ref) => {
   const variants = {
-    default: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm hover:shadow-md",
-    secondary: "bg-secondary-500 text-white hover:bg-secondary-600 shadow-sm hover:shadow-md",
-    outline: "border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300",
-    ghost: "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
-    danger: "bg-red-500 text-white hover:bg-red-600 shadow-sm hover:shadow-md"
+    default: "bg-gradient-to-r from-primary-400 to-primary-500 text-white hover:from-primary-500 hover:to-primary-600 shadow-md hover:shadow-lg border-none",
+    secondary: "bg-gradient-to-r from-secondary-400 to-secondary-500 text-white hover:from-secondary-500 hover:to-secondary-600 shadow-md hover:shadow-lg border-none",
+    outline: "border-2 border-primary-200 text-primary-600 hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 bg-transparent",
+    ghost: "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 bg-transparent",
+    danger: "bg-gradient-to-r from-red-400 to-red-500 text-white hover:from-red-500 hover:to-red-600 shadow-md hover:shadow-lg"
   }
 
   const sizes = {
