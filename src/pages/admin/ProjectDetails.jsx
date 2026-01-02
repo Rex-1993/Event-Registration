@@ -15,6 +15,7 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showQR, setShowQR] = useState(false)
+  const [qrCodeUrl, setQrCodeUrl] = useState("")
 
   useEffect(() => {
     async function loadData() {
@@ -34,6 +35,18 @@ export default function ProjectDetails() {
     }
     loadData()
   }, [id])
+
+  useEffect(() => {
+    if (showQR) {
+        // Small delay to ensure canvas is rendered
+        setTimeout(() => {
+            const canvas = document.getElementById("qr-canvas")
+            if (canvas) {
+                setQrCodeUrl(canvas.toDataURL("image/png"))
+            }
+        }, 100)
+    }
+  }, [showQR, project])
 
   const handleExport = () => {
     if (!registrations.length) return alert("No data to export")
@@ -121,7 +134,16 @@ export default function ProjectDetails() {
        {showQR && (
          <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
             <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
-              <QRCodeCanvas value={publicUrl} size={200} />
+               {/* Hidden Canvas for generation */}
+               <div className="hidden">
+                 <QRCodeCanvas value={publicUrl} size={300} id="qr-canvas" />
+               </div>
+               {/* Visible Image for easy saving */}
+               {qrCodeUrl ? (
+                 <img src={qrCodeUrl} alt="Scan to Register" className="w-[200px] h-[200px] object-contain" />
+               ) : (
+                 <div className="w-[200px] h-[200px] bg-neutral-100 animate-pulse rounded" />
+               )}
             </div>
             <a 
               href={publicUrl} 
@@ -132,14 +154,14 @@ export default function ProjectDetails() {
               <ExternalLink className="w-3.5 h-3.5" />
               {publicUrl}
             </a>
-            <p className="text-lg font-bold mt-4 text-neutral-800">掃描 QR Code 進行報名</p>
+            <p className="text-lg font-bold mt-4 text-neutral-800">掃描(或長按) QR Code 進行報名</p>
          </Card>
        )}
 
        <Card className="shadow-lg overflow-hidden border-t-0">
          <CardHeader className="bg-neutral-50/50 border-b border-neutral-100">
-           <CardTitle className="text-xl">報名資料列表</CardTitle>
-           <CardDescription>顯示所有已報名的參加者資料</CardDescription>
+           <CardTitle className="text-xl">回傳資料列表</CardTitle>
+           <CardDescription>顯示所有參加者回傳的資料</CardDescription>
          </CardHeader>
          <CardContent className="p-0">
            <div className="overflow-x-auto">
@@ -147,8 +169,8 @@ export default function ProjectDetails() {
                <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
                  <tr>
                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
-                   {/* Show first 3-4 fields dynamically */}
-                   {(project.fields || []).slice(0, 4).map(f => (
+                   {/* Show all fields dynamically */}
+                   {(project.fields || []).map(f => (
                      <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label || f.id}</th>
                    ))}
                  </tr>
@@ -156,7 +178,7 @@ export default function ProjectDetails() {
                <tbody className="divide-y divide-neutral-100">
                  {registrations.length === 0 ? (
                    <tr>
-                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
+                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無回傳資料</td>
                    </tr>
                  ) : (
                    registrations.map(reg => (
@@ -164,7 +186,7 @@ export default function ProjectDetails() {
                        <td className="p-4 text-neutral-600 whitespace-nowrap">
                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                        </td>
-                       {(project.fields || []).slice(0, 4).map(f => (
+                       {(project.fields || []).map(f => (
                          <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
                            {reg.data?.[f.id] || '-'}
                          </td>

@@ -1,19 +1,21 @@
 import { Outlet, Link, useLocation } from "react-router-dom"
 import { LayoutDashboard, LogOut } from "lucide-react"
 import { cn } from "../lib/utils"
+import { ThemeToggle } from "../components/ThemeToggle"
 
 export default function AdminLayout() {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex font-sans">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex font-sans transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-neutral-200 hidden md:flex flex-col shadow-sm z-20">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-primary-900 flex items-center gap-2">
+      <aside className="w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 hidden md:flex flex-col shadow-sm z-20">
+        <div className="p-6 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-primary-900 dark:text-primary-100 flex items-center gap-2">
             <LayoutDashboard className="w-6 h-6 text-primary-600" />
             活動報名系統
           </h1>
+          <ThemeToggle />
         </div>
         
         <nav className="flex-1 px-4 space-y-2">
