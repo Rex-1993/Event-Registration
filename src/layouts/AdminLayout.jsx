@@ -33,7 +33,7 @@ export default function AdminLayout() {
         <div className="p-6 hidden md:flex justify-between items-center">
           <h1 className="text-xl font-bold text-primary-900 dark:text-primary-100 flex items-center gap-2">
             <LayoutDashboard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
-            活動報名系統 <span className="text-xs bg-green-100 text-green-700 px-1 py-0.5 rounded font-bold">v1.4</span>
+            活動報名系統 <span className="text-xs bg-blue-100 text-blue-700 px-1 py-0.5 rounded font-bold">v1.5</span>
           </h1>
           <ThemeToggle />
         </div>
