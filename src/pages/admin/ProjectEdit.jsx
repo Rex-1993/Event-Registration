@@ -110,7 +110,7 @@ export default function ProjectEdit() {
       await updateProject(id, formData)
       navigate("/admin/projects")
     } catch (error) {
-      alert("更新專案時發生錯誤: " + error.message)
+      modal.alert("更新專案時發生錯誤: " + error.message, "錯誤")
     } finally {
       setSubmitting(false)
     }
