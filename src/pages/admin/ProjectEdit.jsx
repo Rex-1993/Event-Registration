@@ -7,13 +7,15 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
-import { Loader2, Save, Trash2, LayoutTemplate } from "lucide-react"
-import { STANDARD_TEMPLATES } from "../../lib/templates"
+import { Plus, Save, Trash2, ArrowLeft } from "lucide-react"
+import { useModal } from "../../components/ui/ModalProvider"
+import { STANDARD_TEMPLATES, saveCustomTemplate, deleteCustomTemplate } from "../../lib/templates"
 
 export default function ProjectEdit() {
   const navigate = useNavigate()
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
+  const modal = useModal()
   const [submitting, setSubmitting] = useState(false)
   const [customTemplates, setCustomTemplates] = useState({})
   const [selectedTemplate, setSelectedTemplate] = useState("")
@@ -45,7 +47,8 @@ export default function ProjectEdit() {
         const data = await getProject(id)
         setFormData(data)
       } catch (error) {
-        alert("載入專案失敗: " + error.message)
+        console.error(error)
+        modal.alert("載入專案失敗: " + error.message, "錯誤")
         navigate("/admin/projects")
       } finally {
         setLoading(false)
@@ -54,7 +57,7 @@ export default function ProjectEdit() {
     load()
   }, [id, navigate])
 
-  const handleApplyTemplate = (key) => {
+  const handleApplyTemplate = async (key) => {
     if (!key) return
     
     let template = STANDARD_TEMPLATES[key]
@@ -62,7 +65,7 @@ export default function ProjectEdit() {
         template = customTemplates[key]
     }
 
-    if (template && confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
+    if (template && await modal.confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？", "套用範本")) {
       setFormData(prev => ({
         ...prev,
         fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
@@ -70,35 +73,33 @@ export default function ProjectEdit() {
     }
   }
 
-  const handleSaveTemplate = () => {
-    const name = prompt("請輸入範本名稱:")
-    if (!name) return
-
-    const newTemplateId = `custom_${Date.now()}`
-    const newTemplate = {
-        label: `${name} (自訂)`,
+  const handleSaveTemplate = async () => {
+    const name = await modal.prompt("請輸入範本名稱:", "", "儲存範本")
+    if (name) {
+      const template = {
+        title: formData.title,
+        description: formData.description,
+        theme_color: formData.theme_color,
         fields: formData.fields
+      }
+      saveCustomTemplate(name, template)
+      setCustomTemplates(JSON.parse(localStorage.getItem('customTemplates') || '{}')) // Corrected key and default value
+      modal.alert("範本已儲存！", "成功")
     }
-
-    const updated = { ...customTemplates, [newTemplateId]: newTemplate }
-    setCustomTemplates(updated)
-    localStorage.setItem("customTemplates", JSON.stringify(updated))
-    alert("範本已儲存！")
-    setSelectedTemplate(newTemplateId)
   }
 
-  const handleDeleteTemplate = () => {
-    if (!selectedTemplate.startsWith("custom_")) {
-        alert("只能刪除自訂範本！")
+  const handleDeleteTemplate = async () => {
+    if (!selectedTemplate) return // Use selectedTemplate
+    const isStandard = Object.keys(STANDARD_TEMPLATES).includes(selectedTemplate) // Check if it's a standard template
+    if (isStandard) {
+        modal.alert("只能刪除自訂範本！", "錯誤")
         return
     }
-    
-    if (confirm("確定要刪除此範本嗎？")) {
-        const updated = { ...customTemplates }
-        delete updated[selectedTemplate]
-        setCustomTemplates(updated)
-        localStorage.setItem("customTemplates", JSON.stringify(updated))
-        setSelectedTemplate("")
+
+    if (await modal.confirm("確定要刪除此範本嗎？", "刪除確認")) {
+        deleteCustomTemplate(selectedTemplate) // Use selectedTemplate
+        setCustomTemplates(JSON.parse(localStorage.getItem('customTemplates') || '{}')) // Corrected key and default value
+        setSelectedTemplate("") // Use setSelectedTemplate
     }
   }
 
