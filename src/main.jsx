@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        {console.log("%c WEBSITE VERSION v1.5 LOADED ", "background: blue; color: white; font-size: 20px;")}
+        {console.log("%c WEBSITE VERSION v1.6 LOADED ", "background: purple; color: white; font-size: 20px;")}
         <App />
       </ThemeProvider>
     </ErrorBoundary>
