@@ -3,8 +3,8 @@ import { Link } from "react-router-dom"
 import { getProjects } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
-import { Plus, Users, Calendar, ArrowRight, Trash2 } from "lucide-react"
-import { deleteProject } from "../../lib/api"
+import { Plus, Users, Calendar, ArrowRight, Trash2, Pencil, Copy } from "lucide-react"
+import { deleteProject, createProject } from "../../lib/api"
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
@@ -34,6 +34,26 @@ export default function Dashboard() {
         fetchProjects()
       } catch (error) {
         alert("刪除專案時發生錯誤: " + error.message)
+      }
+    }
+  }
+
+  const handleCopy = async (e, project) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (confirm(`確定要複製專案「${project.title}」嗎？`)) {
+      try {
+        setLoading(true)
+        const { id, created_at, ...copyData } = project
+        await createProject({
+          ...copyData,
+          title: `${project.title} (副本)`
+        })
+        await fetchProjects()
+      } catch (error) {
+        alert("複製專案時發生錯誤: " + error.message)
+      } finally {
+        setLoading(false)
       }
     }
   }
@@ -74,15 +94,28 @@ export default function Dashboard() {
               <div className="h-3 w-full" style={{ backgroundColor: project.theme_color }}></div>
               <CardHeader className="pb-3 relative">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="truncate text-xl text-neutral-800 pr-8">{project.title}</CardTitle>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 text-neutral-400 hover:text-red-600 hover:bg-red-50 -mt-1 -mr-1"
-                    onClick={(e) => handleDelete(e, project.id, project.title)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <CardTitle className="truncate text-xl text-neutral-800 pr-12">{project.title}</CardTitle>
+                  <div className="flex flex-col gap-1 absolute right-4 top-4">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-neutral-400 hover:text-red-600 hover:bg-red-50"
+                      onClick={(e) => handleDelete(e, project.id, project.title)}
+                      title="刪除"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                    <Link to={`/admin/projects/${project.id}/edit`} onClick={(e) => e.stopPropagation()}>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-neutral-400 hover:text-primary-600 hover:bg-neutral-100"
+                        title="編輯"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
                 <CardDescription className="line-clamp-2 min-h-[40px] mt-2 text-neutral-500">{project.description}</CardDescription>
               </CardHeader>
@@ -90,19 +123,30 @@ export default function Dashboard() {
                 <div className="flex items-center gap-4 text-sm text-neutral-500 mb-6 bg-neutral-50 p-3 rounded-lg">
                   <div className="flex items-center gap-1.5">
                     <Users className="w-4 h-4 text-primary-500" />
-                    <span>上限: {project.max_participants}</span>
+                    <span>上限: {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                      <Calendar className="w-4 h-4 text-primary-500" />
                      <span>{project.created_at ? new Date(project.created_at.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
-                <Link to={`/admin/projects/${project.id}`}>
-                  <Button variant="outline" className="w-full gap-2 group-hover:bg-primary-50 group-hover:text-primary-700 group-hover:border-primary-200 transition-colors">
-                    查看詳情
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="flex gap-2">
+                  <Link to={`/admin/projects/${project.id}`} className="flex-1">
+                    <Button variant="outline" className="w-full gap-2 group-hover:bg-primary-50 group-hover:text-primary-700 group-hover:border-primary-200 transition-colors">
+                      查看詳情
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-10 w-10 shrink-0 text-neutral-400 hover:text-blue-600 hover:bg-blue-50"
+                    onClick={(e) => handleCopy(e, project)}
+                    title="複製專案"
+                  >
+                    <Copy className="w-4 h-4" />
                   </Button>
-                </Link>
+                </div>
               </CardContent>
             </Card>
           ))}

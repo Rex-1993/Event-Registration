@@ -1,103 +1,62 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { createProject } from "../../lib/api"
+import { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { getProject, updateProject } from "../../lib/api"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
 import { Button } from "../../components/ui/Button"
 import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
+import { Loader2, ArrowLeft } from "lucide-react"
 
-const TEMPLATES = {
-  singing: {
-    label: "歌唱比賽 (Singing Contest)",
-    fields: [
-      { id: "1", label: "姓名", type: "text", required: true },
-      { id: "2", label: "性別", type: "radio", options: "男, 女", required: true },
-      { id: "3", label: "歌名", type: "text", required: true },
-      { id: "4", label: "原唱", type: "text", required: true },
-      { id: "5", label: "歌曲編號", type: "text", required: false },
-      { id: "6", label: "升降Key", type: "select", options: "原調, +1, +2, -1, -2", required: true },
-      { id: "7", label: "電話", type: "text", required: true },
-      { id: "8", label: "便當", type: "radio", options: "葷, 素", required: true },
-      { id: "9", label: "伴唱機品牌", type: "select", options: "弘音, 音圓, 金嗓, 瑞影, 美華", required: true },
-    ]
-  },
-  tour: {
-    label: "遊覽車旅遊 (Bus Tour)",
-    fields: [
-      { id: "1", label: "姓名", type: "text", required: true },
-      { id: "2", label: "身分證字號", type: "text", required: true },
-      { id: "3", label: "生日", type: "date", required: true },
-      { id: "4", label: "手機", type: "text", required: true },
-      { id: "5", label: "緊急聯絡人/電話", type: "text", required: true },
-      { id: "6", label: "上車地點", type: "radio", options: "地點A, 地點B, 自行前往", required: true },
-      { id: "7", label: "房型", type: "select", options: "兩人房, 四人房, 單人房 (補差價)", required: true },
-       { id: "8", label: "用餐", type: "radio", options: "葷, 素", required: true },
-    ]
-  },
-  assembly: {
-    label: "會員大會 (Member Assembly)",
-    fields: [
-      { id: "1", label: "會員編號", type: "text", required: true },
-      { id: "2", label: "姓名", type: "text", required: true },
-      { id: "3", label: "出席方式", type: "radio", options: "親自出席, 委託出席, 不克出席", required: true },
-      { id: "4", label: "衣服尺寸", type: "select", options: "XS, S, M, L, XL, 2XL", required: true },
-      { id: "5", label: "提案建議", type: "textarea", required: false },
-    ]
-  }
-}
-
-export default function ProjectCreate() {
+export default function ProjectEdit() {
+  const { id } = useParams()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    organizer: "",
-    co_organizer: "",
-    description: "",
-    theme_color: "#98A697", // Default Sage
-    max_participants: 100,
-    fields: [],
-  })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [formData, setFormData] = useState(null)
 
-  const loadTemplate = (key) => {
-    if (confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
-      setFormData(prev => ({
-        ...prev,
-        fields: JSON.parse(JSON.stringify(TEMPLATES[key].fields)) // Deep copy
-      }))
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await getProject(id)
+        setFormData(data)
+      } catch (error) {
+        alert("載入專案時發生錯誤: " + error.message)
+        navigate("/admin/projects")
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+    load()
+  }, [id, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    setSaving(true)
     try {
-      await createProject(formData)
+      const { id: _, created_at, ...updateData } = formData
+      await updateProject(id, updateData)
       navigate("/admin/projects")
     } catch (error) {
-      alert("建立專案時發生錯誤: " + error.message)
+      alert("儲存專案時發生錯誤: " + error.message)
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
   }
 
+  if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
+  if (!formData) return null
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-200 pb-6">
-        <div>
-           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">建立新專案</h1>
-           <p className="text-neutral-500 mt-1">設定活動詳情與報名表單</p>
-        </div>
-        <div className="flex items-center gap-3 bg-neutral-50 p-2 rounded-lg border border-neutral-200">
-           <span className="text-sm text-neutral-600 font-medium px-2">快速範本:</span>
-           {Object.keys(TEMPLATES).map(key => (
-             <Button key={key} size="sm" variant="ghost" type="button" onClick={() => loadTemplate(key)} className="text-primary-600 hover:text-primary-700 hover:bg-white hover:shadow-sm transition-all text-xs sm:text-sm">
-               {TEMPLATES[key].label.split(" ")[0]}
-             </Button>
-           ))}
-        </div>
+      <div className="border-b border-neutral-200 pb-6">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4 -ml-2 text-neutral-500 hover:text-primary-600">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          返回
+        </Button>
+        <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">編輯專案</h1>
+        <p className="text-neutral-500 mt-1">修改活動詳情與報名表單</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
@@ -162,7 +121,7 @@ export default function ProjectCreate() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button type="submit" isLoading={loading} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ backgroundColor: formData.theme_color || undefined }}>建立專案</Button>
+           <Button type="submit" isLoading={saving} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ backgroundColor: formData.theme_color || undefined }}>儲存修改</Button>
         </div>
       </form>
     </div>
