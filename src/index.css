@@ -54,6 +54,9 @@
   }
 }
 
+/* Force dark mode variant to use class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
