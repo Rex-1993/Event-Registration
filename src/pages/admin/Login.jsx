@@ -22,7 +22,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-200 via-primary-300 to-primary-400 p-4">
       <Card className="w-full max-w-md shadow-xl border-t-4 border-primary-500">
         <CardHeader className="text-center space-y-4 pb-2">
           <div className="mx-auto w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mb-2 ring-8 ring-primary-50/50">

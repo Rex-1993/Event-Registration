@@ -65,7 +65,7 @@ export default function ProjectEdit() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card className="shadow-lg border-t-4 border-primary-500 overflow-hidden">
-          <CardHeader className="bg-neutral-50/50 pb-6">
+          <CardHeader className="bg-gradient-to-r from-primary-100 to-primary-200 pb-6">
             <CardTitle className="text-xl text-neutral-800">基本設定</CardTitle>
             <CardDescription>設定活動的基本資訊與外觀</CardDescription>
           </CardHeader>
@@ -111,7 +111,7 @@ export default function ProjectEdit() {
         </Card>
 
         <Card className="shadow-lg border-t-4 border-secondary-500 overflow-hidden">
-          <CardHeader className="bg-neutral-50/50 pb-6">
+          <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-200 pb-6">
             <CardTitle className="text-xl text-neutral-800">報名表單設計</CardTitle>
             <CardDescription>自訂參加者需要填寫的欄位</CardDescription>
           </CardHeader>

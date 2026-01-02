@@ -90,7 +90,7 @@ export default function Dashboard() {
           {projects.map(project => (
             <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-neutral-200/60">
               <div className="h-3 w-full" style={{ backgroundColor: project.theme_color }}></div>
-              <CardHeader className="pb-3 relative">
+              <CardHeader className="pb-3 relative bg-gradient-to-r from-primary-100/50 to-primary-200/50 border-b border-primary-100/50">
                 <div className="flex justify-between items-start">
                   <CardTitle className="truncate text-xl text-neutral-800 pr-8">{project.title}</CardTitle>
                   <div className="flex flex-col gap-1 -mt-1 -mr-1">
