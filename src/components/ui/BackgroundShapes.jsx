@@ -11,6 +11,7 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
       animationDuration: 20 + Math.random() * 30, // s, slower
       rotationDuration: 30 + Math.random() * 60, // s
       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+      pulseDuration: 2 + Math.random() * 4, // s, breathing effect
       delay: Math.random() * 5, // s
       color: themeColor,
       isCircle: Math.random() > 0.4, // Mix of circles and squares
@@ -30,11 +31,11 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
             width: `${shape.size}px`,
             height: `${shape.size}px`,
             backgroundColor: 'transparent',
-            border: `${shape.borderWidth}px solid ${shape.color}`,
+            border: `1px solid ${shape.color}`,
             opacity: shape.opacity,
-            animation: `float ${shape.animationDuration}s ease-in-out infinite, rotate ${shape.rotationDuration}s linear infinite`,
+            animation: `float ${shape.animationDuration}s ease-in-out infinite, rotate ${shape.rotationDuration}s linear infinite, pulse-border ${shape.pulseDuration}s ease-in-out infinite`,
             animationDelay: `${shape.delay}s`,
-            animationDirection: `normal, ${shape.rotationDirection > 0 ? 'normal' : 'reverse'}`,
+            animationDirection: `normal, ${shape.rotationDirection > 0 ? 'normal' : 'reverse'}, normal`,
             transform: 'translate(-50%, -50%)'
           }}
         />
@@ -48,6 +49,10 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
         @keyframes rotate {
           0% { rotate: 0deg; }
           100% { rotate: 360deg; }
+        }
+        @keyframes pulse-border {
+          0%, 100% { border-width: 1px; opacity: 0.3; }
+          50% { border-width: 3px; opacity: 0.6; }
         }
       `}</style>
     </div>
