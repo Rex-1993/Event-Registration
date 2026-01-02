@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { getProject, registerParticipant, getRegistrations } from "../../lib/api" // We check count differently now
+import { cn, getContrastYIQ } from "../../lib/utils"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
 import { Input } from "../../components/ui/Input"
@@ -66,6 +67,8 @@ export default function EventRegistration() {
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
   if (!project) return <div className="text-center py-20 text-neutral-500">找不到專案</div>
 
+  const textColor = getContrastYIQ(project.theme_color);
+
   return (
     <div className="min-h-screen w-full font-sans relative overflow-x-hidden pb-20">
       {/* Fixed Background Layer */}
@@ -76,19 +79,21 @@ export default function EventRegistration() {
 
       {/* Hero Section */}
       <div 
-        className="relative w-full h-[320px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-20"
+        className="relative w-full h-[360px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem]"
         style={{ 
-          background: `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd, #637080)`
+          background: `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
+          color: textColor
         }}
       >
-        <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]"></div>
-        <div className="relative z-10 space-y-4 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700">
-           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
+        <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px] rounded-b-[3rem]"></div>
+        <div className="relative z-10 space-y-6 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700">
+           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
              {project.title}
            </h1>
-           <p className="text-white/90 text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm">
-             {project.organizer} {project.co_organizer && `| ${project.co_organizer}`}
-           </p>
+           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm space-y-1 opacity-90" style={{ color: textColor }}>
+             <p>主辦單位：{project.organizer}</p>
+             {project.co_organizer && <p>協辦單位：{project.co_organizer}</p>}
+           </div>
         </div>
       </div>
 
@@ -137,7 +142,7 @@ export default function EventRegistration() {
                      )}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-8 px-6 md:px-10">
+                <CardContent className="pt-8 px-4 md:px-8">
                   <form onSubmit={handleSubmit} className="space-y-8">
                     {project.fields.map(field => {
                       const commonProps = {

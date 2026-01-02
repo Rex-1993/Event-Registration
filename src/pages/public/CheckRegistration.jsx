@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../..
 import { Button } from "../../components/ui/Button"
 import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
+import { getContrastYIQ } from "../../lib/utils"
 import { Search, ArrowLeft, UserCheck } from "lucide-react"
+import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 export default function CheckRegistration() {
   const { id } = useParams()
@@ -35,24 +37,50 @@ export default function CheckRegistration() {
 
   if (!project) return <div className="p-10 text-center"><div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full mx-auto"/></div>
 
-  return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <Link to={`/event/${id}`} className="inline-block mb-4">
-        <Button 
-          variant="outline" 
-          className="bg-white hover:bg-neutral-50 text-neutral-800 border-2 border-neutral-900 shadow-sm px-6 h-12 text-base font-medium hover:border-black transition-all hover:-translate-y-0.5 gap-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          返回報名頁面
-        </Button>
-      </Link>
+  const textColor = getContrastYIQ(project.theme_color);
 
-      <div className="text-center mb-8 space-y-2">
-        <h1 className="text-3xl font-bold text-neutral-900">{project.title}</h1>
-        <p className="text-neutral-500">報名狀態查詢</p>
+  return (
+    <div className="min-h-screen w-full font-sans relative overflow-x-hidden pb-20">
+      {/* Fixed Background Layer */}
+      <div className="fixed inset-0 bg-[#f8f9fa] -z-20"></div>
+
+      {/* Dynamic Background Decoration */}
+      <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={15} />
+
+      {/* Hero Section */}
+      <div 
+        className="relative w-full h-[320px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem]"
+        style={{ 
+          background: `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
+          color: textColor
+        }}
+      >
+        <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px] rounded-b-[3rem]"></div>
+        
+        <Link to={`/event/${id}`} className="absolute top-6 left-6 z-20">
+          <Button 
+            variant="ghost" 
+            className="text-white hover:bg-white/20 border border-white/30 backdrop-blur-md"
+            style={{ color: textColor, borderColor: textColor ? `${textColor}40` : undefined }}
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            返回報名頁面
+          </Button>
+        </Link>
+
+        <div className="relative z-10 space-y-4 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700">
+           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
+             {project.title}
+           </h1>
+           <p className="text-xl font-medium opacity-90" style={{ color: textColor }}>
+             報名狀態查詢
+           </p>
+        </div>
       </div>
 
-      <Card className="max-w-md mx-auto shadow-lg border-t-4 border-primary-500">
+      {/* Content Container (Overlapping Hero) */}
+      <div className="container mx-auto px-4 -mt-20 relative z-20">
+        <Card className="max-w-md mx-auto shadow-2xl bg-white/95 backdrop-blur-xl border-t-4" style={{ borderColor: project.theme_color }}>
         <CardHeader>
           <CardTitle>查詢報名資料</CardTitle>
           <CardDescription>請輸入您的完整姓名以查詢是否已報名成功。</CardDescription>
@@ -102,6 +130,7 @@ export default function CheckRegistration() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }
