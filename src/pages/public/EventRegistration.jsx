@@ -28,13 +28,10 @@ export default function EventRegistration() {
         setProject(proj)
         
         // Check capacity
-        // Convention: 0 = Unlimited
-        const max = parseInt(proj.max_participants)
-        if (max > 0) {
-          const regs = await getRegistrations(id)
-          if (regs.length >= max) {
-            setIsFull(true)
-          }
+        // This is not efficient for huge lists, but fine for <1000
+        const regs = await getRegistrations(id)
+        if (parseInt(proj.max_participants) !== 0 && regs.length >= parseInt(proj.max_participants)) {
+          setIsFull(true)
         }
       } catch (error) {
         console.error(error)
@@ -78,7 +75,7 @@ export default function EventRegistration() {
             style={{ backgroundColor: project.theme_color }}
           />
         </div>
-        <p className="text-neutral-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed text-lg break-words px-6 text-left">
+        <p className="text-neutral-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed text-lg break-words px-2 text-left">
            {project.description}
         </p>
 

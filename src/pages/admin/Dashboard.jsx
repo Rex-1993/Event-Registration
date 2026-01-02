@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { getProjects } from "../../lib/api"
+import { getProjects, deleteProject, createProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
-import { Plus, Users, Calendar, ArrowRight, Trash2, Pencil, Copy } from "lucide-react"
-import { deleteProject, createProject } from "../../lib/api"
+import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy } from "lucide-react"
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
@@ -42,19 +41,18 @@ export default function Dashboard() {
     e.preventDefault()
     e.stopPropagation()
     if (confirm(`確定要複製專案「${project.title}」嗎？`)) {
-      try {
-        setLoading(true)
-        const { id, created_at, ...copyData } = project
-        await createProject({
-          ...copyData,
-          title: `${project.title} (副本)`
-        })
-        await fetchProjects()
-      } catch (error) {
-        alert("複製專案時發生錯誤: " + error.message)
-      } finally {
-        setLoading(false)
-      }
+       try {
+         // Create a copy of the project data, removing the ID and appending (副本) to the title
+         const { id, created_at, ...projectData } = project
+         const newProject = {
+           ...projectData,
+           title: `${project.title} (副本)`
+         }
+         await createProject(newProject)
+         fetchProjects() // Refresh list
+       } catch (error) {
+         alert("複製專案時發生錯誤: " + error.message)
+       }
     }
   }
 
@@ -94,9 +92,9 @@ export default function Dashboard() {
               <div className="h-3 w-full" style={{ backgroundColor: project.theme_color }}></div>
               <CardHeader className="pb-3 relative">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="truncate text-xl text-neutral-800 pr-12">{project.title}</CardTitle>
-                  <div className="flex flex-col gap-1 absolute right-4 top-4">
-                    <Button 
+                  <CardTitle className="truncate text-xl text-neutral-800 pr-8">{project.title}</CardTitle>
+                  <div className="flex flex-col gap-1 -mt-1 -mr-1">
+                     <Button 
                       variant="ghost" 
                       size="icon" 
                       className="h-8 w-8 text-neutral-400 hover:text-red-600 hover:bg-red-50"
@@ -105,16 +103,25 @@ export default function Dashboard() {
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
-                    <Link to={`/admin/projects/${project.id}/edit`} onClick={(e) => e.stopPropagation()}>
+                    <Link to={`/admin/projects/${project.id}/edit`}>
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-8 w-8 text-neutral-400 hover:text-primary-600 hover:bg-neutral-100"
+                        className="h-8 w-8 text-neutral-400 hover:text-blue-600 hover:bg-blue-50"
                         title="編輯"
                       >
-                        <Pencil className="w-4 h-4" />
+                        <Edit className="w-4 h-4" />
                       </Button>
                     </Link>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-neutral-400 hover:text-green-600 hover:bg-green-50"
+                      onClick={(e) => handleCopy(e, project)}
+                      title="複製參加"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
                 <CardDescription className="line-clamp-2 min-h-[40px] mt-2 text-neutral-500">{project.description}</CardDescription>
@@ -130,23 +137,12 @@ export default function Dashboard() {
                      <span>{project.created_at ? new Date(project.created_at.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Link to={`/admin/projects/${project.id}`} className="flex-1">
-                    <Button variant="outline" className="w-full gap-2 group-hover:bg-primary-50 group-hover:text-primary-700 group-hover:border-primary-200 transition-colors">
-                      查看詳情
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-10 w-10 shrink-0 text-neutral-400 hover:text-blue-600 hover:bg-blue-50"
-                    onClick={(e) => handleCopy(e, project)}
-                    title="複製專案"
-                  >
-                    <Copy className="w-4 h-4" />
+                <Link to={`/admin/projects/${project.id}`}>
+                  <Button variant="outline" className="w-full gap-2 group-hover:bg-primary-50 group-hover:text-primary-700 group-hover:border-primary-200 transition-colors">
+                    查看詳情
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                </div>
+                </Link>
               </CardContent>
             </Card>
           ))}

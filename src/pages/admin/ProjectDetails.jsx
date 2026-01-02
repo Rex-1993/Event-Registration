@@ -103,7 +103,7 @@ export default function ProjectDetails() {
          <div>
            <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
            <p className="text-neutral-500 mt-2 text-lg">
-             <span className="font-semibold text-primary-600">{registrations.length}</span> / {project.max_participants} 已報名
+             <span className="font-semibold text-primary-600">{registrations.length}</span> / {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants} 已報名
            </p>
          </div>
          <div className="flex gap-3">

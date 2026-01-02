@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { getProject, updateProject } from "../../lib/api"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
 import { Button } from "../../components/ui/Button"
@@ -7,14 +7,22 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
-import { Loader2, ArrowLeft } from "lucide-react"
+import { Loader2 } from "lucide-react"
 
 export default function ProjectEdit() {
-  const { id } = useParams()
   const navigate = useNavigate()
+  const { id } = useParams()
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [formData, setFormData] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [formData, setFormData] = useState({
+    title: "",
+    organizer: "",
+    co_organizer: "",
+    description: "",
+    theme_color: "#98A697",
+    max_participants: 100,
+    fields: [],
+  })
 
   useEffect(() => {
     async function load() {
@@ -22,7 +30,7 @@ export default function ProjectEdit() {
         const data = await getProject(id)
         setFormData(data)
       } catch (error) {
-        alert("載入專案時發生錯誤: " + error.message)
+        alert("載入專案失敗: " + error.message)
         navigate("/admin/projects")
       } finally {
         setLoading(false)
@@ -33,30 +41,26 @@ export default function ProjectEdit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setSaving(true)
+    setSubmitting(true)
     try {
-      const { id: _, created_at, ...updateData } = formData
-      await updateProject(id, updateData)
+      await updateProject(id, formData)
       navigate("/admin/projects")
     } catch (error) {
-      alert("儲存專案時發生錯誤: " + error.message)
+      alert("更新專案時發生錯誤: " + error.message)
     } finally {
-      setSaving(false)
+      setSubmitting(false)
     }
   }
 
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
-  if (!formData) return null
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
-      <div className="border-b border-neutral-200 pb-6">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4 -ml-2 text-neutral-500 hover:text-primary-600">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          返回
-        </Button>
-        <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">編輯專案</h1>
-        <p className="text-neutral-500 mt-1">修改活動詳情與報名表單</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-200 pb-6">
+        <div>
+           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">編輯專案</h1>
+           <p className="text-neutral-500 mt-1">修改活動與表單設定</p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
@@ -72,8 +76,8 @@ export default function ProjectEdit() {
                 <Input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="請輸入活動名稱" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                 <Label className="text-neutral-700">人數上限 (設定為 0 代表無限制)</Label>
-                 <Input type="number" required value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
+                 <Label className="text-neutral-700">人數上限 (設定 0 為無限制)</Label>
+                 <Input type="number" required min="0" value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
                 <Label className="text-neutral-700">主辦單位</Label>
@@ -121,7 +125,7 @@ export default function ProjectEdit() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button type="submit" isLoading={saving} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ backgroundColor: formData.theme_color || undefined }}>儲存修改</Button>
+           <Button type="submit" isLoading={submitting} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5" style={{ backgroundColor: formData.theme_color || undefined }}>儲存修改</Button>
         </div>
       </form>
     </div>

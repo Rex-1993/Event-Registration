@@ -111,7 +111,7 @@ export const registerParticipant = async (projectId, registrationData) => {
     const project = await getProject(projectId);
     if (!project) throw new Error("Project not found");
     
-    if (countSnapshot.size >= parseInt(project.max_participants)) {
+    if (parseInt(project.max_participants) !== 0 && countSnapshot.size >= parseInt(project.max_participants)) {
       throw new Error("Registration Full (名額已滿)");
     }
 

@@ -113,8 +113,8 @@ export default function ProjectCreate() {
                 <Input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="請輸入活動名稱" className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
-                 <Label className="text-neutral-700">人數上限 (設定為 0 代表無限制)</Label>
-                 <Input type="number" required value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
+                 <Label className="text-neutral-700">人數上限 (設定 0 為無限制)</Label>
+                 <Input type="number" required min="0" value={formData.max_participants} onChange={e => setFormData({...formData, max_participants: e.target.value})} className="focus:ring-primary-500" />
               </div>
               <div className="space-y-2">
                 <Label className="text-neutral-700">主辦單位</Label>
