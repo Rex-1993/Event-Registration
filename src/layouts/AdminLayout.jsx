@@ -2,13 +2,11 @@ import { Outlet, Link, useLocation } from "react-router-dom"
 import { LayoutDashboard, LogOut } from "lucide-react"
 import { cn } from "../lib/utils"
 
-import bgLandscape from "../assets/bg-landscape.png"
-
 export default function AdminLayout() {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen flex flex-col md:flex-row font-sans">
       {/* Mobile Header */}
       <div className="md:hidden bg-primary-50/90 backdrop-blur-sm border-b border-neutral-200 p-4 flex justify-between items-center shadow-sm z-30 sticky top-0">
         <h1 className="text-lg font-bold text-primary-900 flex items-center gap-2">
@@ -59,11 +57,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto relative">
-        <div className="absolute inset-0 -z-10">
-          <img src={bgLandscape} alt="Background" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px]"></div>
-        </div>
+      <main className="flex-1 overflow-auto bg-gradient-to-br from-primary-200 to-primary-300">
         <div className="container mx-auto p-6 md:p-10 max-w-7xl">
           <Outlet />
         </div>
