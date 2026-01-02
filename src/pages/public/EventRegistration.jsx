@@ -8,6 +8,7 @@ import { Label } from "../../components/ui/Label"
 import { Select } from "../../components/ui/Select"
 import { Textarea } from "../../components/ui/Textarea"
 import { Loader2, Search } from "lucide-react"
+import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 export default function EventRegistration() {
   const { id } = useParams()
@@ -68,11 +69,7 @@ export default function EventRegistration() {
   return (
     <div className="min-h-screen w-full bg-[#f8f9fa] font-sans relative overflow-x-hidden pb-20">
       {/* Dynamic Background Decoration */}
-      <div className="fixed inset-0 pointer-events-none opacity-40 mix-blend-multiply -z-10">
-         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-200 to-transparent"></div>
-         <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-50"></div>
-         <div className="absolute top-1/2 -left-24 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-60"></div>
-      </div>
+      <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={8} />
 
       {/* Hero Section */}
       <div 

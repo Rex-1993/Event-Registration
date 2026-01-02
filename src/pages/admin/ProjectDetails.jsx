@@ -95,31 +95,37 @@ export default function ProjectDetails() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
-       <Link to="/admin/projects" className="text-neutral-500 hover:text-primary-600 flex items-center gap-2 transition-colors">
-         <ArrowLeft className="w-4 h-4" /> 返回專案列表
+       <Link to="/admin/projects">
+         <Button variant="outline" className="bg-gradient-to-r from-neutral-50 to-neutral-100 hover:from-neutral-100 hover:to-neutral-200 text-neutral-600 border-neutral-200 hover:border-neutral-300 transition-all">
+            <ArrowLeft className="w-4 h-4 mr-2" /> 返回問卷列表
+         </Button>
        </Link>
 
-       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-neutral-200 pb-8">
-         <div>
-           <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
-           <p className="text-neutral-500 mt-2 text-lg">
-             <span className="font-semibold text-primary-600">{registrations.length}</span> / {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants} 已報名
-           </p>
-         </div>
-         <div className="flex gap-3">
-            <Button 
-              onClick={() => setShowQR(!showQR)} 
-              className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 shadow-sm hover:shadow transition-all"
-            >
-              <QrCode className="w-4 h-4 mr-2" />
-              {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
-            </Button>
-           <Button onClick={handleExport} className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-             <Download className="w-4 h-4 mr-2" />
-             匯出 Excel
-           </Button>
-         </div>
-       </div>
+        {/* Header Actions */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-neutral-200 pb-8">
+          <div>
+            <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
+            <p className="text-neutral-500 mt-2 text-lg">
+              <span className="font-semibold text-primary-600">{registrations.length}</span> / {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants} 已報名
+            </p>
+          </div>
+          <div className="flex gap-3">
+             <Button 
+               onClick={() => setShowQR(!showQR)} 
+               className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+             >
+               <QrCode className="w-4 h-4 mr-2 text-white" />
+               {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
+             </Button>
+             <Button 
+               onClick={handleExport} 
+               className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+             >
+               <Download className="w-4 h-4 mr-2 text-white" />
+               匯出 Excel
+             </Button>
+          </div>
+        </div>
 
        {showQR && (
          <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">

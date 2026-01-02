@@ -4,6 +4,7 @@ import { getProjects, deleteProject, createProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy } from "lucide-react"
+import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
@@ -57,8 +58,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex justify-between items-end border-b border-neutral-200 pb-6">
+    <div className="space-y-8 animate-in fade-in duration-500 relative">
+      <BackgroundShapes themeColor="#94a3b8" density={5} />
+      <div className="flex justify-between items-end border-b border-neutral-200 pb-6 relative z-10">
         <div>
            <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">問卷管理</h1>
            <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
