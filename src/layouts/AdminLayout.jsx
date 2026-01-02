@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from "react-router-dom"
 import { LayoutDashboard, LogOut } from "lucide-react"
 import { cn } from "../lib/utils"
+import BackgroundShapes from "../components/ui/BackgroundShapes"
 
 export default function AdminLayout() {
   const location = useLocation()
@@ -59,6 +60,7 @@ export default function AdminLayout() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto relative">
         <div className="fixed inset-0 bg-gradient-to-br from-primary-200 to-primary-300 -z-20"></div>
+        <BackgroundShapes themeColor="#ffffff" density={15} />
         <div className="container mx-auto p-6 md:p-10 max-w-7xl relative z-10">
           <Outlet />
         </div>
