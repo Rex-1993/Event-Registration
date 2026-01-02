@@ -7,7 +7,7 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
-import { Loader2, ArrowLeft } from "lucide-react"
+import { Loader2 } from "lucide-react"
 
 export default function ProjectEdit() {
   const navigate = useNavigate()
@@ -56,10 +56,6 @@ export default function ProjectEdit() {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
-       <Link to="/admin/projects" className="text-neutral-500 hover:text-primary-600 flex items-center gap-2 transition-colors mb-4 inline-flex">
-         <ArrowLeft className="w-4 h-4" /> 返回專案列表
-       </Link>
-
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-200 pb-6">
         <div>
            <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">編輯專案</h1>

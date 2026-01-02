@@ -2,7 +2,6 @@
   "name": "activity-app",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://rex-1.github.io/event-Registration/",
   "type": "module",
   "scripts": {
     "dev": "vite",

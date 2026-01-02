@@ -118,7 +118,7 @@ export default function Dashboard() {
                       size="icon" 
                       className="h-8 w-8 text-neutral-400 hover:text-green-600 hover:bg-green-50"
                       onClick={(e) => handleCopy(e, project)}
-                      title="複製問卷"
+                      title="複製參加"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>

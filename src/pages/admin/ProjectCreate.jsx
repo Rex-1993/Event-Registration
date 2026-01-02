@@ -8,8 +8,6 @@ import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/Select"
-
 const TEMPLATES = {
   singing: {
     label: "歌唱比賽 (Singing Contest)",
@@ -47,52 +45,12 @@ const TEMPLATES = {
       { id: "4", label: "衣服尺寸", type: "select", options: "XS, S, M, L, XL, 2XL", required: true },
       { id: "5", label: "提案建議", type: "textarea", required: false },
     ]
-  },
-  conference: {
-    label: "學術研討會 (Conference)",
-    fields: [
-      { id: "1", label: "姓名 (Name)", type: "text", required: true },
-      { id: "2", label: "電子郵件 (Email)", type: "email", required: true },
-      { id: "3", label: "服務單位 (Affiliation)", type: "text", required: true },
-      { id: "4", label: "飲食偏好 (Dietary)", type: "select", options: "葷食, 素食, 穆斯林友善", required: true },
-      { id: "5", label: "是否投稿 (Abstract)", type: "radio", options: "是, 否", required: true },
-    ]
-  },
-  volunteer: {
-    label: "志工招募 (Volunteer)",
-    fields: [
-      { id: "1", label: "姓名", type: "text", required: true },
-      { id: "2", label: "聯絡電話", type: "text", required: true },
-      { id: "3", label: "可服務時段", type: "checkbox", options: "週間上午, 週間下午, 週末全天", required: true },
-      { id: "4", label: "專長技能", type: "textarea", required: true },
-      { id: "5", label: "T恤尺寸", type: "select", options: "S, M, L, XL", required: true },
-    ]
-  },
-  reunion: {
-    label: "同學會 (Reunion)",
-    fields: [
-      { id: "1", label: "姓名", type: "text", required: true },
-      { id: "2", label: "畢業年份", type: "text", required: true },
-      { id: "3", label: "參加人數 (含眷屬)", type: "select", options: "1人, 2人, 3人, 4人以上", required: true },
-      { id: "4", label: "飲食禁忌", type: "text", required: false },
-    ]
-  },
-  groupbuy: {
-    label: "團購登記 (Group Buy)",
-    fields: [
-      { id: "1", label: "訂購人姓名", type: "text", required: true },
-      { id: "2", label: "商品選項", type: "select", options: "A套餐, B套餐, C套餐", required: true },
-      { id: "3", label: "數量", type: "number", required: true },
-      { id: "4", label: "配送地址", type: "text", required: true },
-      { id: "5", label: "備註事項", type: "textarea", required: false },
-    ]
   }
 }
 
 export default function ProjectCreate() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState("")
   const [formData, setFormData] = useState({
     title: "",
     organizer: "",
@@ -103,12 +61,11 @@ export default function ProjectCreate() {
     fields: [],
   })
 
-  const applyTemplate = () => {
-    if (!selectedTemplate) return
+  const loadTemplate = (key) => {
     if (confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
       setFormData(prev => ({
         ...prev,
-        fields: JSON.parse(JSON.stringify(TEMPLATES[selectedTemplate].fields)) // Deep copy
+        fields: JSON.parse(JSON.stringify(TEMPLATES[key].fields)) // Deep copy
       }))
     }
   }
@@ -130,35 +87,16 @@ export default function ProjectCreate() {
     <div className="space-y-8 max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-200 pb-6">
         <div>
-           <h1 className="text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight">建立新專案</h1>
-           <p className="text-neutral-500 dark:text-neutral-400 mt-1">設定活動詳情與報名表單</p>
+           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">建立新專案</h1>
+           <p className="text-neutral-500 mt-1">設定活動詳情與報名表單</p>
         </div>
-        <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-900 p-2 rounded-lg border border-neutral-200 dark:border-neutral-800">
-           <span className="text-sm text-neutral-600 dark:text-neutral-400 font-medium px-2 whitespace-nowrap">快速範本:</span>
-           <div className="w-[200px]">
-             <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-               <SelectTrigger className="h-9">
-                 <SelectValue placeholder="選擇範本..." />
-               </SelectTrigger>
-               <SelectContent>
-                 {Object.keys(TEMPLATES).map(key => (
-                   <SelectItem key={key} value={key}>
-                     {TEMPLATES[key].label}
-                   </SelectItem>
-                 ))}
-               </SelectContent>
-             </Select>
-           </div>
-           <Button 
-             size="sm" 
-             variant="outline" 
-             type="button" 
-             onClick={applyTemplate}
-             disabled={!selectedTemplate}
-             className="h-9 text-primary-600 dark:text-primary-400 hover:text-primary-700 hover:bg-white dark:hover:bg-neutral-800"
-           >
-             套用
-           </Button>
+        <div className="flex items-center gap-3 bg-neutral-50 p-2 rounded-lg border border-neutral-200">
+           <span className="text-sm text-neutral-600 font-medium px-2">快速範本:</span>
+           {Object.keys(TEMPLATES).map(key => (
+             <Button key={key} size="sm" variant="ghost" type="button" onClick={() => loadTemplate(key)} className="text-primary-600 hover:text-primary-700 hover:bg-white hover:shadow-sm transition-all text-xs sm:text-sm">
+               {TEMPLATES[key].label.split(" ")[0]}
+             </Button>
+           ))}
         </div>
       </div>
 
