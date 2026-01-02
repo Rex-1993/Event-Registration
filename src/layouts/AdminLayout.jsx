@@ -2,6 +2,8 @@ import { Outlet, Link, useLocation } from "react-router-dom"
 import { LayoutDashboard, LogOut } from "lucide-react"
 import { cn } from "../lib/utils"
 
+import bgLandscape from "../assets/bg-landscape.png"
+
 export default function AdminLayout() {
   const location = useLocation()
 
@@ -58,7 +60,10 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-primary-300 -z-10"></div>
+        <div className="absolute inset-0 -z-10">
+          <img src={bgLandscape} alt="Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px]"></div>
+        </div>
         <div className="container mx-auto p-6 md:p-10 max-w-7xl">
           <Outlet />
         </div>
