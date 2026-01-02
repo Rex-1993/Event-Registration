@@ -207,8 +207,7 @@ export default function EventRegistration() {
                         style={{ 
                           background: isFull 
                             ? undefined 
-                            : `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
-                          backgroundColor: isFull ? undefined : project.theme_color // Fallback
+                            : `linear-gradient(135deg, #f97316, #ea580c)`, // Orange-500 to Orange-600
                         }}
                         disabled={isFull || submitting}
                       >

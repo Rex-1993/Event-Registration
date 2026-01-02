@@ -66,7 +66,7 @@ export default function Dashboard() {
            <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
         </div>
         <Link to="/admin/projects/create">
-          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white border-0">
+          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0">
             <Plus className="w-4 h-4" />
             建立新專案
           </Button>
