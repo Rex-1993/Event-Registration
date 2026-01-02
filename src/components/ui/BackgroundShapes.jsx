@@ -52,7 +52,7 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
         }
         @keyframes pulse-border {
           0%, 100% { border-width: 1px; opacity: 0.3; }
-          50% { border-width: 3px; opacity: 0.6; }
+          50% { border-width: 10px; opacity: 0.6; }
         }
       `}</style>
     </div>

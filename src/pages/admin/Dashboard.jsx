@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { getProjects, deleteProject, createProject } from "../../lib/api"
+import { getProjects, deleteProject, createProject, getRegistrations } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon } from "lucide-react"
@@ -12,6 +12,21 @@ export default function Dashboard() {
   useEffect(() => {
     fetchProjects()
   }, [])
+
+  const [counts, setCounts] = useState({})
+
+  useEffect(() => {
+    if (projects.length > 0) {
+      projects.forEach(async (p) => {
+         try {
+           const regs = await getRegistrations(p.id)
+           setCounts(prev => ({ ...prev, [p.id]: regs.length }))
+         } catch (e) {
+           console.error("Failed to load count for", p.id)
+         }
+      })
+    }
+  }, [projects])
 
   const fetchProjects = async () => {
     try {
@@ -148,8 +163,10 @@ export default function Dashboard() {
                     <span>上限: {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                     <Calendar className="w-4 h-4 text-primary-500" />
-                     <span>{project.created_at ? new Date(project.created_at.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
+                     <Users className="w-4 h-4 text-green-600" />
+                     <span className="font-medium text-green-700">
+                       已報名: {counts[project.id] !== undefined ? counts[project.id] : '...'} 人
+                     </span>
                   </div>
                 </div>
                 <Link to={`/admin/projects/${project.id}`}>

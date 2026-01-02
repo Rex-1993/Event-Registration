@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { Card, CardContent } from "../../components/ui/Card"
 import { Button } from "../../components/ui/Button"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, ArrowLeft } from "lucide-react"
 
 export default function RegistrationSuccess() {
   const { state } = useLocation()
@@ -22,8 +22,9 @@ export default function RegistrationSuccess() {
         <Link to={`/event/${state.projectId}`}>
           <Button 
             variant="outline" 
-            className="bg-white hover:bg-neutral-50 text-neutral-600 border-neutral-200 shadow-sm px-8 py-6 h-auto text-lg font-medium hover:border-neutral-300 transition-all hover:-translate-y-0.5"
+            className="bg-white hover:bg-neutral-50 text-neutral-800 border-2 border-neutral-900 shadow-sm px-8 py-6 h-auto text-lg font-medium hover:border-black transition-all hover:-translate-y-0.5 gap-2"
           >
+            <ArrowLeft className="w-5 h-5" />
             返回活動報名頁
           </Button>
         </Link>
