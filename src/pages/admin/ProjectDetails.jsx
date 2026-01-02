@@ -42,7 +42,23 @@ export default function ProjectDetails() {
         setTimeout(() => {
             const canvas = document.getElementById("qr-canvas")
             if (canvas) {
-                setQrCodeUrl(canvas.toDataURL("image/png"))
+                // Create a new canvas to add the border
+                const borderSize = 20
+                const newCanvas = document.createElement("canvas")
+                const ctx = newCanvas.getContext("2d")
+                
+                // Set dimensions (original size + double border)
+                newCanvas.width = canvas.width + (borderSize * 2)
+                newCanvas.height = canvas.height + (borderSize * 2)
+                
+                // Fill with white background
+                ctx.fillStyle = "#FFFFFF"
+                ctx.fillRect(0, 0, newCanvas.width, newCanvas.height)
+                
+                // Draw the original QR code centered
+                ctx.drawImage(canvas, borderSize, borderSize)
+                
+                setQrCodeUrl(newCanvas.toDataURL("image/png"))
             }
         }, 100)
     }
