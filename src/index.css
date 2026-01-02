@@ -55,8 +55,11 @@
 }
 
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
-    @apply bg-neutral-50 text-neutral-800 antialiased selection:bg-primary-100 selection:text-primary-900;
+    @apply bg-neutral-50 text-neutral-800 antialiased selection:bg-primary-100 selection:text-primary-900 dark:bg-neutral-950 dark:text-neutral-50;
   }
 }
 
@@ -81,5 +84,5 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-neutral-300 rounded-full transition-colors hover:bg-neutral-400;
+  @apply bg-neutral-300 rounded-full transition-colors hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600;
 }
