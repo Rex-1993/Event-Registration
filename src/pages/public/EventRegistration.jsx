@@ -48,7 +48,7 @@ export default function EventRegistration() {
     setSubmitting(true)
     try {
       await registerParticipant(id, formData)
-      navigate("/success", { state: { projectTitle: project.title } })
+      navigate("/success", { state: { projectTitle: project.title, projectId: id } })
     } catch (error) {
       alert(error.message)
     } finally {

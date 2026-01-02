@@ -17,6 +17,17 @@ export default function RegistrationSuccess() {
         您已成功報名 <strong>{projectTitle}</strong>。<br/>
         我們期待您的參與！
       </p>
+
+      {state?.projectId && (
+        <Link to={`/event/${state.projectId}`}>
+          <Button 
+            variant="outline" 
+            className="bg-white hover:bg-neutral-50 text-neutral-600 border-neutral-200 shadow-sm px-8 py-6 h-auto text-lg font-medium hover:border-neutral-300 transition-all hover:-translate-y-0.5"
+          >
+            返回活動報名頁
+          </Button>
+        </Link>
+      )}
     </div>
   )
 }
