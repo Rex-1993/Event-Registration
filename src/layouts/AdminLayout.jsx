@@ -14,7 +14,7 @@ export default function AdminLayout() {
       <header className="md:hidden bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 p-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
         <h1 className="text-lg font-bold text-primary-900 dark:text-primary-100 flex items-center gap-2">
           <LayoutDashboard className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-          活動報名 <span className="text-xs bg-green-100 text-green-700 px-1 py-0.5 rounded font-bold">v1.4</span>
+          活動報名
         </h1>
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
@@ -33,7 +33,7 @@ export default function AdminLayout() {
         <div className="p-6 hidden md:flex justify-between items-center">
           <h1 className="text-xl font-bold text-primary-900 dark:text-primary-100 flex items-center gap-2">
             <LayoutDashboard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
-            活動報名系統 <span className="text-xs bg-purple-100 text-purple-700 px-1 py-0.5 rounded font-bold">v1.6</span>
+            活動報名系統
           </h1>
           <ThemeToggle />
         </div>

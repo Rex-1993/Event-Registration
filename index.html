@@ -7,20 +7,7 @@
     <title>activity-app</title>
   </head>
   <body>
-    <div id="root">
-      <div style="font-family: sans-serif; text-align: center; padding: 50px;">
-        <h1 style="color: #666;">System Loading... (v1.6)</h1>
-        <p>If this message doesn't disappear in 3 seconds, JavaScript failed to load.</p>
-      </div>
-      <script>
-        setTimeout(function() {
-          var root = document.getElementById('root');
-          if (root && root.innerHTML.indexOf('System Loading') !== -1) {
-             document.body.innerHTML = '<div style="background:red; color:white; padding:20px; text-align:center;"><h1>CRITICAL ERROR</h1><p>JavaScript Bundle Failed to Load.</p><p>Please check console (F12) for 404 errors.</p></div>';
-          }
-        }, 3000);
-      </script>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
