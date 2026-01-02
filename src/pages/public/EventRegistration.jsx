@@ -67,7 +67,10 @@ export default function EventRegistration() {
   if (!project) return <div className="text-center py-20 text-neutral-500">找不到專案</div>
 
   return (
-    <div className="min-h-screen w-full bg-[#f8f9fa] font-sans relative overflow-x-hidden pb-20">
+    <div className="min-h-screen w-full font-sans relative overflow-x-hidden pb-20">
+      {/* Fixed Background Layer */}
+      <div className="fixed inset-0 bg-[#f8f9fa] -z-20"></div>
+
       {/* Dynamic Background Decoration */}
       <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={8} />
 
