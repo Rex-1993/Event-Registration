@@ -72,7 +72,7 @@ export default function EventRegistration() {
       <div className="fixed inset-0 bg-[#f8f9fa] -z-20"></div>
 
       {/* Dynamic Background Decoration */}
-      <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={8} />
+      <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={15} />
 
       {/* Hero Section */}
       <div 
