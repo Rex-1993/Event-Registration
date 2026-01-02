@@ -90,9 +90,9 @@ export default function EventRegistration() {
            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
              {project.title}
            </h1>
-           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm flex flex-col items-center gap-2 opacity-90" style={{ color: textColor }}>
-             <p><span className="font-bold">主辦單位:</span> {project.organizer}</p>
-             {project.co_organizer && <p><span className="font-bold">協辦單位:</span> {project.co_organizer}</p>}
+           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm space-y-4 opacity-90 text-left md:text-center" style={{ color: textColor }}>
+             <p><span className="font-bold opacity-70 text-base block md:inline md:mr-2">主辦單位：</span>{project.organizer}</p>
+             {project.co_organizer && <p><span className="font-bold opacity-70 text-base block md:inline md:mr-2">協辦單位：</span>{project.co_organizer}</p>}
            </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function EventRegistration() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
            {/* Left Column: Info & Description */}
            <div className="lg:col-span-1 space-y-6 animate-in slide-in-from-left-6 duration-700 delay-100">
-              <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-md overflow-hidden">
+              <Card className="border-0 shadow-xl shadow-black/5 bg-white/80 backdrop-blur-md overflow-hidden rounded-3xl ring-1 ring-black/5">
                 <CardHeader className="bg-neutral-50/80 border-b border-neutral-100 pb-4">
                   <CardTitle className="text-lg text-neutral-800 flex items-center gap-2">
                     <Search className="w-5 h-5 text-primary-500" />
@@ -126,7 +126,7 @@ export default function EventRegistration() {
 
            {/* Right Column: Registration Form */}
            <div className="lg:col-span-2 animate-in slide-in-from-bottom-6 duration-700 delay-200">
-             <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-xl ring-1 ring-black/5">
+             <Card className="border-0 shadow-2xl shadow-indigo-500/10 bg-white/95 backdrop-blur-xl ring-1 ring-black/5 rounded-3xl">
                 <CardHeader className="pb-6 border-b border-neutral-100/50">
                   <CardTitle className="text-2xl text-neutral-800 flex items-center gap-2">
                     <span className="w-2 h-8 rounded-full" style={{ backgroundColor: project.theme_color }}></span>
@@ -150,7 +150,7 @@ export default function EventRegistration() {
                         disabled: isFull,
                         value: formData[field.id] || "",
                         onChange: (e) => handleChange(field.id, e.target.value),
-                        className: "focus:ring-2 focus:ring-offset-0 transition-shadow duration-200 bg-neutral-50/50 hover:bg-white border-neutral-200"
+                        className: "focus:ring-2 focus:ring-offset-0 transition-all duration-300 bg-neutral-50/60 hover:bg-white border-neutral-200 rounded-xl focus:shadow-md"
                       }
                       
                       const focusStyle = { '--tw-ring-color': project.theme_color }

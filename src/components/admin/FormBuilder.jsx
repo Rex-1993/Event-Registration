@@ -56,20 +56,15 @@ function SortableField({ field, updateField, removeField }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4">
+    <div ref={setNodeRef} style={style} className="mb-4 touch-manipulation" {...attributes} {...listeners}>
       <Card className={`relative group hover:border-primary-200 transition-colors ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
-        
-        {/* Drag Handle Color Block */}
-        <div 
-          {...attributes} 
-          {...listeners} 
-          className="h-9 bg-neutral-100/50 border-b border-neutral-100 flex items-center justify-center cursor-move touch-none hover:bg-primary-50 transition-colors"
-          title="拖曳以此區塊排序"
-        >
-          <GripVertical className="w-4 h-4 text-neutral-400 group-hover:text-primary-500 transition-colors" />
-        </div>
-
         <CardContent className="p-4 flex gap-4 items-start">
+          <div 
+            className="mt-3 text-neutral-400 p-1 rounded hover:bg-neutral-100"
+            title="拖曳以排序 (可長按卡片)"
+          >
+            <GripVertical className="w-5 h-5" />
+          </div>
           
           <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-5 space-y-2">
@@ -147,13 +142,13 @@ export default function FormBuilder({ value = [], onChange }) {
   const sensors = useSensors(
     useSensor(MouseSensor, {
         activationConstraint: {
-            distance: 0, // Instant drag since we have a dedicated handle
+            distance: 5, // Require movement of 5px to start drag (balance between responsiveness and preventing accidental clicks)
         },
     }),
     useSensor(TouchSensor, {
         activationConstraint: {
-            delay: 0, // No delay needed for dedicated handle
-            tolerance: 5,
+            delay: 250, // 250ms long press to start drag
+            tolerance: 5, // 5px movement tolerance
         },
     }),
     useSensor(KeyboardSensor, {
