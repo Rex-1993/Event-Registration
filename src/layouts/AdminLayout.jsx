@@ -8,7 +8,7 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col md:flex-row font-sans">
       {/* Mobile Header */}
-      <div className="md:hidden bg-white border-b border-neutral-200 p-4 flex justify-between items-center shadow-sm z-30 sticky top-0">
+      <div className="md:hidden bg-primary-50/90 backdrop-blur-sm border-b border-neutral-200 p-4 flex justify-between items-center shadow-sm z-30 sticky top-0">
         <h1 className="text-lg font-bold text-primary-900 flex items-center gap-2">
           <LayoutDashboard className="w-5 h-5 text-primary-600" />
           活動報名系統
@@ -19,7 +19,7 @@ export default function AdminLayout() {
       </div>
 
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-neutral-200 hidden md:flex flex-col shadow-sm z-20">
+      <aside className="w-64 bg-primary-50/50 border-r border-neutral-200 hidden md:flex flex-col shadow-sm z-20">
         <div className="p-6">
           <h1 className="text-xl font-bold text-primary-900 flex items-center gap-2">
             <LayoutDashboard className="w-6 h-6 text-primary-600" />
