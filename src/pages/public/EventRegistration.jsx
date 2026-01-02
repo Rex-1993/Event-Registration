@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { getProject, registerParticipant, getRegistrations } from "../../lib/api" // We check count differently now
-import { cn, getContrastYIQ } from "../../lib/utils"
+import { getContrastYIQ } from "../../lib/utils"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
 import { Input } from "../../components/ui/Input"

@@ -1,0 +1,126 @@
+
+C:\Users\stu88\Desktop\活動報名網頁\src\components\ui\BackgroundShapes.jsx
+   7:12  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   5 |     return Array.from({ length: density }).map((_, i) => ({
+   6 |       id: i,
+>  7 |       top: Math.random() * 100, // %
+     |            ^^^^^^^^^^^^^ Cannot call impure function
+   8 |       left: Math.random() * 100, // %
+   9 |       size: 50 + Math.random() * 200, // px, smaller for lines
+  10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle                                                                                                                react-hooks/purity
+   8:13  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   6 |       id: i,
+   7 |       top: Math.random() * 100, // %
+>  8 |       left: Math.random() * 100, // %
+     |             ^^^^^^^^^^^^^ Cannot call impure function
+   9 |       size: 50 + Math.random() * 200, // px, smaller for lines
+  10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle
+  11 |       animationDuration: 20 + Math.random() * 30, // s, slower                                                                                                            react-hooks/purity
+   9:18  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   7 |       top: Math.random() * 100, // %
+   8 |       left: Math.random() * 100, // %
+>  9 |       size: 50 + Math.random() * 200, // px, smaller for lines
+     |                  ^^^^^^^^^^^^^ Cannot call impure function
+  10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle
+  11 |       animationDuration: 20 + Math.random() * 30, // s, slower
+  12 |       rotationDuration: 30 + Math.random() * 60, // s                                                              react-hooks/purity
+  10:22  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   8 |       left: Math.random() * 100, // %
+   9 |       size: 50 + Math.random() * 200, // px, smaller for lines
+> 10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle
+     |                      ^^^^^^^^^^^^^ Cannot call impure function
+  11 |       animationDuration: 20 + Math.random() * 30, // s, slower
+  12 |       rotationDuration: 30 + Math.random() * 60, // s
+  13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,                                        react-hooks/purity
+  11:31  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   9 |       size: 50 + Math.random() * 200, // px, smaller for lines
+  10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle
+> 11 |       animationDuration: 20 + Math.random() * 30, // s, slower
+     |                               ^^^^^^^^^^^^^ Cannot call impure function
+  12 |       rotationDuration: 30 + Math.random() * 60, // s
+  13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+  14 |       pulseDuration: 2 + Math.random() * 4, // s, breathing effect  react-hooks/purity
+  12:30  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  10 |       opacity: 0.1 + Math.random() * 0.2, // Subtle
+  11 |       animationDuration: 20 + Math.random() * 30, // s, slower
+> 12 |       rotationDuration: 30 + Math.random() * 60, // s
+     |                              ^^^^^^^^^^^^^ Cannot call impure function
+  13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+  14 |       pulseDuration: 2 + Math.random() * 4, // s, breathing effect
+  15 |       delay: Math.random() * 5, // s                             react-hooks/purity
+  13:26  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  11 |       animationDuration: 20 + Math.random() * 30, // s, slower
+  12 |       rotationDuration: 30 + Math.random() * 60, // s
+> 13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+     |                          ^^^^^^^^^^^^^ Cannot call impure function
+  14 |       pulseDuration: 2 + Math.random() * 4, // s, breathing effect
+  15 |       delay: Math.random() * 5, // s
+  16 |       color: themeColor,                                                            react-hooks/purity
+  14:26  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  12 |       rotationDuration: 30 + Math.random() * 60, // s
+  13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+> 14 |       pulseDuration: 2 + Math.random() * 4, // s, breathing effect
+     |                          ^^^^^^^^^^^^^ Cannot call impure function
+  15 |       delay: Math.random() * 5, // s
+  16 |       color: themeColor,
+  17 |       isCircle: Math.random() > 0.4, // Mix of circles and squares                                                        react-hooks/purity
+  15:14  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  13 |       rotationDirection: Math.random() > 0.5 ? 1 : -1,
+  14 |       pulseDuration: 2 + Math.random() * 4, // s, breathing effect
+> 15 |       delay: Math.random() * 5, // s
+     |              ^^^^^^^^^^^^^ Cannot call impure function
+  16 |       color: themeColor,
+  17 |       isCircle: Math.random() > 0.4, // Mix of circles and squares
+  18 |       borderWidth: 1 + Math.random() * 2, // 1px - 3px                                                                   react-hooks/purity
+  17:17  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  15 |       delay: Math.random() * 5, // s
+  16 |       color: themeColor,
+> 17 |       isCircle: Math.random() > 0.4, // Mix of circles and squares
+     |                 ^^^^^^^^^^^^^ Cannot call impure function
+  18 |       borderWidth: 1 + Math.random() * 2, // 1px - 3px
+  19 |     }))
+  20 |   }, [themeColor, density])                                                                                                                                                      react-hooks/purity
+  18:24  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  16 |       color: themeColor,
+  17 |       isCircle: Math.random() > 0.4, // Mix of circles and squares
+> 18 |       borderWidth: 1 + Math.random() * 2, // 1px - 3px
+     |                        ^^^^^^^^^^^^^ Cannot call impure function
+  19 |     }))
+  20 |   }, [themeColor, density])
+  21 |                                                                                                                                                                                    react-hooks/purity
+
+✖ 11 problems (11 errors, 0 warnings)
+

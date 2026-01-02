@@ -1,8 +1,10 @@
-import { useMemo } from "react"
+import { useState, useEffect } from "react"
 
 export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }) {
-  const shapes = useMemo(() => {
-    return Array.from({ length: density }).map((_, i) => ({
+  const [shapes, setShapes] = useState([])
+
+  useEffect(() => {
+    setShapes(Array.from({ length: density }).map((_, i) => ({
       id: i,
       top: Math.random() * 100, // %
       left: Math.random() * 100, // %
@@ -16,7 +18,7 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
       color: themeColor,
       isCircle: Math.random() > 0.4, // Mix of circles and squares
       borderWidth: 1 + Math.random() * 2, // 1px - 3px
-    }))
+    })))
   }, [themeColor, density])
 
   return (

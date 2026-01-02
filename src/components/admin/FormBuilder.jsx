@@ -132,8 +132,6 @@ function SortableField({ field, updateField, removeField }) {
 
 export default function FormBuilder({ value = [], onChange }) {
   const [fields, setFields] = useState(value)
-  const [activeId, setActiveId] = useState(null);
-
   useEffect(() => {
     setFields(value)
   }, [value])
@@ -181,13 +179,8 @@ export default function FormBuilder({ value = [], onChange }) {
     onChange(newFields)
   }
 
-  const handleDragStart = (event) => {
-    setActiveId(event.active.id);
-  }
-
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    setActiveId(null);
 
     if (active.id !== over?.id) {
       setFields((items) => {
@@ -205,7 +198,6 @@ export default function FormBuilder({ value = [], onChange }) {
       <DndContext 
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
