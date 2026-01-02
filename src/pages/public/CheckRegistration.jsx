@@ -37,8 +37,14 @@ export default function CheckRegistration() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <Link to={`/event/${id}`} className="flex items-center text-neutral-500 hover:text-primary-600 text-sm mb-4 transition-colors">
-        <ArrowLeft className="w-4 h-4 mr-1" /> 返回報名頁面
+      <Link to={`/event/${id}`} className="inline-block mb-4">
+        <Button 
+          variant="outline" 
+          className="bg-white hover:bg-neutral-50 text-neutral-800 border-2 border-neutral-900 shadow-sm px-6 h-12 text-base font-medium hover:border-black transition-all hover:-translate-y-0.5 gap-2"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          返回報名頁面
+        </Button>
       </Link>
 
       <div className="text-center mb-8 space-y-2">
