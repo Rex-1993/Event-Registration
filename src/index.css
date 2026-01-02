@@ -48,16 +48,16 @@
 
 /* Smart Scaling Adaptation */
 
-/* Semi-Wide Screen (Scale up by ~30%) */
+/* Semi-Wide Screen (Scale up to 120%) */
 @media (min-width: 1200px) {
   html {
-    font-size: 21px; /* 16px * 1.3125 ≈ 21px */
+    font-size: 19.2px; /* 16px * 1.2 = 19.2px */
   }
 }
 
-/* Wide Screen (Scale up by ~50%) */
+/* Wide Screen (Scale up to 140%) */
 @media (min-width: 1600px) {
   html {
-    font-size: 24px; /* 16px * 1.5 = 24px */
+    font-size: 22.4px; /* 16px * 1.4 = 22.4px */
   }
 }
