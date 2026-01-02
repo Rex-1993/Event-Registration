@@ -236,13 +236,7 @@ export default function ProjectCreate() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button 
-             type="submit" 
-             isLoading={loading} 
-             className="h-12 px-8 text-lg font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 border-0 text-white"
-           >
-             建立專案
-           </Button>
+           <Button type="submit" isLoading={loading} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0">建立專案</Button>
         </div>
       </form>
     </div>

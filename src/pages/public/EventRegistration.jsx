@@ -52,7 +52,7 @@ export default function EventRegistration() {
     setSubmitting(true)
     try {
       await registerParticipant(id, formData)
-      navigate("/success", { state: { projectTitle: project.title, projectId: id } })
+      navigate("/success", { state: { projectTitle: project.title } })
     } catch (error) {
       modal.alert(error.message, "提交失敗")
     } finally {
@@ -204,13 +204,8 @@ export default function EventRegistration() {
                     <div className="pt-8 pb-4">
                       <Button 
                         type="submit" 
-                        className="w-full text-lg h-14 font-bold shadow-lg shadow-neutral-200 hover:shadow-xl hover:shadow-neutral-300 transition-all hover:-translate-y-1 rounded-xl text-white border-0" 
-                        style={{ 
-                          // If full, gray. If not full, use gradient based on theme color or fallback to high contrast gradient if theme color is too light/dark?
-                          // Let's use a nice gradient based on theme color + a shift
-                          background: isFull ? undefined : `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
-                          filter: isFull ? 'none' : 'brightness(1.1) saturate(1.2)'
-                        }}
+                        className="w-full text-lg h-14 font-bold shadow-lg shadow-neutral-200 hover:shadow-xl hover:shadow-neutral-300 transition-all hover:-translate-y-1 rounded-xl" 
+                        style={{ backgroundColor: isFull ? undefined : project.theme_color }}
                         disabled={isFull || submitting}
                       >
                         {submitting ? (

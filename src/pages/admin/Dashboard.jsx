@@ -70,8 +70,8 @@ export default function Dashboard() {
            <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
         </div>
         <Link to="/admin/projects/create">
-          <Button className="gap-2 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-indigo-600 to-primary-600 hover:from-indigo-700 hover:to-primary-700 h-10 px-5 text-base border-0">
-            <Plus className="w-5 h-5 text-white" />
+          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0">
+            <Plus className="w-4 h-4" />
             建立新專案
           </Button>
         </Link>
@@ -87,7 +87,7 @@ export default function Dashboard() {
           <CardContent>
              <p className="text-xl text-neutral-500 mb-6 font-medium">目前沒有任何專案</p>
              <Link to="/admin/projects/create">
-                <Button variant="outline" className="h-12 px-6">建立您的第一個專案</Button>
+                <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-md">建立您的第一個專案</Button>
              </Link>
           </CardContent>
         </Card>

@@ -110,7 +110,7 @@ export default function ProjectEdit() {
       await updateProject(id, formData)
       navigate("/admin/projects")
     } catch (error) {
-      modal.alert("更新專案時發生錯誤: " + error.message, "錯誤")
+      alert("更新專案時發生錯誤: " + error.message)
     } finally {
       setSubmitting(false)
     }
@@ -238,13 +238,7 @@ export default function ProjectEdit() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button 
-             type="submit" 
-             isLoading={submitting} 
-             className="h-12 px-8 text-lg font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 border-0 text-white"
-           >
-             儲存修改
-           </Button>
+           <Button type="submit" isLoading={submitting} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0">儲存修改</Button>
         </div>
       </form>
     </div>
