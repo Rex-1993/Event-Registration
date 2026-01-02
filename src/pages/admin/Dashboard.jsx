@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getProjects, deleteProject, createProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
-import { useModal } from "../../components/ui/ModalProvider"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy } from "lucide-react"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
@@ -10,7 +9,6 @@ import BackgroundShapes from "../../components/ui/BackgroundShapes"
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
-  const modal = useModal()
 
   useEffect(() => {
     fetchProjects()
@@ -30,13 +28,12 @@ export default function Dashboard() {
   const handleDelete = async (e, id, title) => {
     e.preventDefault()
     e.stopPropagation()
-    const confirmed = await modal.confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`, "刪除確認")
-    if (confirmed) {
+    if (confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`)) {
       try {
         await deleteProject(id)
         fetchProjects()
       } catch (error) {
-        modal.alert("刪除專案時發生錯誤: " + error.message, "錯誤")
+        alert("刪除專案時發生錯誤: " + error.message)
       }
     }
   }
@@ -44,8 +41,7 @@ export default function Dashboard() {
   const handleCopy = async (e, project) => {
     e.preventDefault()
     e.stopPropagation()
-    const confirmed = await modal.confirm(`確定要複製專案「${project.title}」嗎？`, "複製確認")
-    if (confirmed) {
+    if (confirm(`確定要複製專案「${project.title}」嗎？`)) {
        try {
          // Create a copy of the project data, removing the ID and appending (副本) to the title
          const { id, created_at, ...projectData } = project
@@ -56,7 +52,7 @@ export default function Dashboard() {
          await createProject(newProject)
          fetchProjects() // Refresh list
        } catch (error) {
-         modal.alert("複製專案時發生錯誤: " + error.message, "錯誤")
+         alert("複製專案時發生錯誤: " + error.message)
        }
     }
   }
@@ -70,7 +66,7 @@ export default function Dashboard() {
            <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
         </div>
         <Link to="/admin/projects/create">
-          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0">
+          <Button className="gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white border-0">
             <Plus className="w-4 h-4" />
             建立新專案
           </Button>
@@ -87,7 +83,7 @@ export default function Dashboard() {
           <CardContent>
              <p className="text-xl text-neutral-500 mb-6 font-medium">目前沒有任何專案</p>
              <Link to="/admin/projects/create">
-                <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-md">建立您的第一個專案</Button>
+                <Button variant="outline" className="h-12 px-6">建立您的第一個專案</Button>
              </Link>
           </CardContent>
         </Card>

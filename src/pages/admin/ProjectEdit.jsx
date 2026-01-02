@@ -7,15 +7,13 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
-import { Plus, Save, Trash2, ArrowLeft } from "lucide-react"
-import { useModal } from "../../components/ui/ModalProvider"
-import { STANDARD_TEMPLATES, saveCustomTemplate, deleteCustomTemplate } from "../../lib/templates"
+import { Loader2, Save, Trash2, LayoutTemplate } from "lucide-react"
+import { STANDARD_TEMPLATES } from "../../lib/templates"
 
 export default function ProjectEdit() {
   const navigate = useNavigate()
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
-  const modal = useModal()
   const [submitting, setSubmitting] = useState(false)
   const [customTemplates, setCustomTemplates] = useState({})
   const [selectedTemplate, setSelectedTemplate] = useState("")
@@ -47,8 +45,7 @@ export default function ProjectEdit() {
         const data = await getProject(id)
         setFormData(data)
       } catch (error) {
-        console.error(error)
-        modal.alert("載入專案失敗: " + error.message, "錯誤")
+        alert("載入專案失敗: " + error.message)
         navigate("/admin/projects")
       } finally {
         setLoading(false)
@@ -57,7 +54,7 @@ export default function ProjectEdit() {
     load()
   }, [id, navigate])
 
-  const handleApplyTemplate = async (key) => {
+  const handleApplyTemplate = (key) => {
     if (!key) return
     
     let template = STANDARD_TEMPLATES[key]
@@ -65,7 +62,7 @@ export default function ProjectEdit() {
         template = customTemplates[key]
     }
 
-    if (template && await modal.confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？", "套用範本")) {
+    if (template && confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
       setFormData(prev => ({
         ...prev,
         fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
@@ -73,33 +70,35 @@ export default function ProjectEdit() {
     }
   }
 
-  const handleSaveTemplate = async () => {
-    const name = await modal.prompt("請輸入範本名稱:", "", "儲存範本")
-    if (name) {
-      const template = {
-        title: formData.title,
-        description: formData.description,
-        theme_color: formData.theme_color,
+  const handleSaveTemplate = () => {
+    const name = prompt("請輸入範本名稱:")
+    if (!name) return
+
+    const newTemplateId = `custom_${Date.now()}`
+    const newTemplate = {
+        label: `${name} (自訂)`,
         fields: formData.fields
-      }
-      saveCustomTemplate(name, template)
-      setCustomTemplates(JSON.parse(localStorage.getItem('customTemplates') || '{}')) // Corrected key and default value
-      modal.alert("範本已儲存！", "成功")
     }
+
+    const updated = { ...customTemplates, [newTemplateId]: newTemplate }
+    setCustomTemplates(updated)
+    localStorage.setItem("customTemplates", JSON.stringify(updated))
+    alert("範本已儲存！")
+    setSelectedTemplate(newTemplateId)
   }
 
-  const handleDeleteTemplate = async () => {
-    if (!selectedTemplate) return // Use selectedTemplate
-    const isStandard = Object.keys(STANDARD_TEMPLATES).includes(selectedTemplate) // Check if it's a standard template
-    if (isStandard) {
-        modal.alert("只能刪除自訂範本！", "錯誤")
+  const handleDeleteTemplate = () => {
+    if (!selectedTemplate.startsWith("custom_")) {
+        alert("只能刪除自訂範本！")
         return
     }
-
-    if (await modal.confirm("確定要刪除此範本嗎？", "刪除確認")) {
-        deleteCustomTemplate(selectedTemplate) // Use selectedTemplate
-        setCustomTemplates(JSON.parse(localStorage.getItem('customTemplates') || '{}')) // Corrected key and default value
-        setSelectedTemplate("") // Use setSelectedTemplate
+    
+    if (confirm("確定要刪除此範本嗎？")) {
+        const updated = { ...customTemplates }
+        delete updated[selectedTemplate]
+        setCustomTemplates(updated)
+        localStorage.setItem("customTemplates", JSON.stringify(updated))
+        setSelectedTemplate("")
     }
   }
 
@@ -238,7 +237,7 @@ export default function ProjectEdit() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button type="submit" isLoading={submitting} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0">儲存修改</Button>
+           <Button type="submit" isLoading={submitting} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white border-0">儲存修改</Button>
         </div>
       </form>
     </div>

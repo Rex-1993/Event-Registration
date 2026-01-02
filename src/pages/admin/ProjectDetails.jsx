@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { getProject, getRegistrations, deleteProject } from "../../lib/api"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
-import { useModal } from "../../components/ui/ModalProvider"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
 import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink } from "lucide-react"
 import * as XLSX from "xlsx"
@@ -16,7 +15,6 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showQR, setShowQR] = useState(false)
-  const modal = useModal()
 
   useEffect(() => {
     async function loadData() {
@@ -38,7 +36,7 @@ export default function ProjectDetails() {
   }, [id])
 
   const handleExport = () => {
-    if (!registrations.length) return modal.alert("No data to export", "提示")
+    if (!registrations.length) return alert("No data to export")
     
     // Flatten data for Excel
     const dataToExport = registrations.map(reg => {
@@ -70,12 +68,12 @@ export default function ProjectDetails() {
   }
 
   const handleDelete = async () => {
-    if (await modal.confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`, "刪除確認")) {
+    if (confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`)) {
       try {
         await deleteProject(id)
         navigate("/admin/projects")
       } catch (error) {
-        modal.alert("刪除專案時發生錯誤: " + error.message, "錯誤")
+        alert("刪除專案時發生錯誤: " + error.message)
       }
     }
   }

@@ -8,7 +8,6 @@ import { Label } from "../../components/ui/Label"
 import { Select } from "../../components/ui/Select"
 import { Textarea } from "../../components/ui/Textarea"
 import { Loader2, Search } from "lucide-react"
-import { useModal } from "../../components/ui/ModalProvider"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 export default function EventRegistration() {
@@ -18,8 +17,6 @@ export default function EventRegistration() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({})
-  const [completed, setCompleted] = useState(false)
-  const modal = useModal()
   const [isFull, setIsFull] = useState(false)
   
   // Note: In a real high-concurrency app, this check should be server-side or optimistic.
@@ -39,7 +36,6 @@ export default function EventRegistration() {
         }
       } catch (error) {
         console.error(error)
-        modal.alert(error.message, "提交失敗")
       } finally {
         setLoading(false)
       }
@@ -54,7 +50,7 @@ export default function EventRegistration() {
       await registerParticipant(id, formData)
       navigate("/success", { state: { projectTitle: project.title } })
     } catch (error) {
-      modal.alert(error.message, "提交失敗")
+      alert(error.message)
     } finally {
       setSubmitting(false)
     }
@@ -204,8 +200,13 @@ export default function EventRegistration() {
                     <div className="pt-8 pb-4">
                       <Button 
                         type="submit" 
-                        className="w-full text-lg h-14 font-bold shadow-lg shadow-neutral-200 hover:shadow-xl hover:shadow-neutral-300 transition-all hover:-translate-y-1 rounded-xl" 
-                        style={{ backgroundColor: isFull ? undefined : project.theme_color }}
+                        className="w-full text-lg h-14 font-bold shadow-lg shadow-neutral-400/20 hover:shadow-xl hover:shadow-neutral-400/40 transition-all hover:-translate-y-1 rounded-xl text-white border-0" 
+                        style={{ 
+                          background: isFull 
+                            ? undefined 
+                            : `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
+                          backgroundColor: isFull ? undefined : project.theme_color // Fallback
+                        }}
                         disabled={isFull || submitting}
                       >
                         {submitting ? (

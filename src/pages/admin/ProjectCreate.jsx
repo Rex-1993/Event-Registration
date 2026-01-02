@@ -7,14 +7,13 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
-import { Plus, Save, Trash2, LayoutTemplate } from "lucide-react"
-import { useModal } from "../../components/ui/ModalProvider"
+import { Save, Trash2, LayoutTemplate } from "lucide-react"
+
 import { STANDARD_TEMPLATES } from "../../lib/templates"
 
 export default function ProjectCreate() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const modal = useModal()
   const [customTemplates, setCustomTemplates] = useState({})
   const [selectedTemplate, setSelectedTemplate] = useState("")
   
@@ -40,60 +39,47 @@ export default function ProjectCreate() {
     }
   }, [])
 
-  const handleTemplateChange = async (templateId) => {
-    setSelectedTemplate(templateId)
+  const handleApplyTemplate = (key) => {
+    if (!key) return
     
-    if (!templateId) return
-
-    let template = STANDARD_TEMPLATES[templateId]
+    let template = STANDARD_TEMPLATES[key]
     if (!template) {
         // Try custom templates
-        template = customTemplates[templateId]
+        template = customTemplates[key]
     }
 
-    if (template) {
-        const shouldOverwrite = await modal.confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？", "套用範本")
-        if (shouldOverwrite) {
-           setFormData(prev => ({
-             ...prev,
-             title: template.title || prev.title,
-             description: template.description || prev.description,
-             theme_color: template.theme_color || prev.theme_color,
-             fields: template.fields ? JSON.parse(JSON.stringify(template.fields)) : [] // Deep copy
-           }))
-        }
+    if (template && confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
+      setFormData(prev => ({
+        ...prev,
+        fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
+      }))
     }
   }
 
-  const handleSaveTemplate = async () => {
-    const name = await modal.prompt("請輸入範本名稱:", "", "儲存範本")
+  const handleSaveTemplate = () => {
+    const name = prompt("請輸入範本名稱:")
     if (!name) return
 
     const newTemplateId = `custom_${Date.now()}`
     const newTemplate = {
         label: `${name} (自訂)`,
-        fields: formData.fields,
-        title: formData.title,
-        description: formData.description,
-        theme_color: formData.theme_color,
+        fields: formData.fields
     }
 
     const updated = { ...customTemplates, [newTemplateId]: newTemplate }
     setCustomTemplates(updated)
     localStorage.setItem("customTemplates", JSON.stringify(updated))
-    modal.alert("範本已儲存！", "成功")
+    alert("範本已儲存！")
     setSelectedTemplate(newTemplateId)
   }
 
-  const handleDeleteTemplate = async () => {
-    if (!selectedTemplate) return
-    const isStandard = Object.keys(STANDARD_TEMPLATES).includes(selectedTemplate)
-    if (isStandard) {
-        modal.alert("只能刪除自訂範本！", "錯誤")
+  const handleDeleteTemplate = () => {
+    if (!selectedTemplate.startsWith("custom_")) {
+        alert("只能刪除自訂範本！")
         return
     }
-
-    if (await modal.confirm("確定要刪除此範本嗎？", "刪除確認")) {
+    
+    if (confirm("確定要刪除此範本嗎？")) {
         const updated = { ...customTemplates }
         delete updated[selectedTemplate]
         setCustomTemplates(updated)
@@ -109,8 +95,7 @@ export default function ProjectCreate() {
       await createProject(formData)
       navigate("/admin/projects")
     } catch (error) {
-      console.error(error)
-      modal.alert("建立專案時發生錯誤: " + error.message, "錯誤")
+      alert("建立專案時發生錯誤: " + error.message)
     } finally {
       setLoading(false)
     }
@@ -236,7 +221,7 @@ export default function ProjectCreate() {
 
         <div className="flex justify-end gap-4 pt-4">
            <Button type="button" variant="outline" onClick={() => navigate("/admin/projects")} className="h-12 px-8 text-neutral-600 hover:text-neutral-900 border-neutral-300">取消</Button>
-           <Button type="submit" isLoading={loading} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0">建立專案</Button>
+           <Button type="submit" isLoading={loading} className="h-12 px-8 text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white border-0">建立專案</Button>
         </div>
       </form>
     </div>
