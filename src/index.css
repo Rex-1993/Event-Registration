@@ -45,3 +45,10 @@
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
   }
 }
+
+/* Wide Screen Adaptation (Scale up by ~30%) */
+@media (min-width: 1600px) {
+  html {
+    font-size: 21px; /* 16px * 1.3125 = 21px */
+  }
+}
