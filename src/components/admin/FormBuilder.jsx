@@ -142,7 +142,7 @@ export default function FormBuilder({ value = [], onChange }) {
   const sensors = useSensors(
     useSensor(MouseSensor, {
         activationConstraint: {
-            distance: 10, // Require movement of 10px to start drag (prevents accidental clicks/selection)
+            distance: 5, // Require movement of 5px to start drag (balance between responsiveness and preventing accidental clicks)
         },
     }),
     useSensor(TouchSensor, {

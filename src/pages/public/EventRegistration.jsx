@@ -90,9 +90,9 @@ export default function EventRegistration() {
            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
              {project.title}
            </h1>
-           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm space-y-1 opacity-90" style={{ color: textColor }}>
-             <p>主辦單位：{project.organizer}</p>
-             {project.co_organizer && <p>協辦單位：{project.co_organizer}</p>}
+           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm flex flex-col items-center gap-2 opacity-90" style={{ color: textColor }}>
+             <p><span className="font-bold">主辦單位:</span> {project.organizer}</p>
+             {project.co_organizer && <p><span className="font-bold">協辦單位:</span> {project.co_organizer}</p>}
            </div>
         </div>
       </div>
@@ -227,9 +227,7 @@ export default function EventRegistration() {
                           "確認送出報名"
                         )}
                       </Button>
-                      <p className="text-center text-xs text-neutral-400 mt-4">
-                        提交即代表您同意我們收集並處理您的個人資料
-                      </p>
+
                     </div>
                   </form>
                 </CardContent>
