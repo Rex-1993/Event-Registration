@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../..
 import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Select } from "../../components/ui/Select"
-import { Select } from "../../components/ui/Select"
 import { Textarea } from "../../components/ui/Textarea"
 import { Loader2, Search } from "lucide-react"
 import { useModal } from "../../components/ui/ModalProvider"
@@ -40,6 +39,7 @@ export default function EventRegistration() {
         }
       } catch (error) {
         console.error(error)
+        modal.alert(error.message, "提交失敗")
       } finally {
         setLoading(false)
       }
@@ -54,7 +54,7 @@ export default function EventRegistration() {
       await registerParticipant(id, formData)
       navigate("/success", { state: { projectTitle: project.title } })
     } catch (error) {
-      alert(error.message)
+      modal.alert(error.message, "提交失敗")
     } finally {
       setSubmitting(false)
     }
