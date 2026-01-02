@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { getProjects, deleteProject, createProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
-import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy } from "lucide-react"
+import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon } from "lucide-react"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 export default function Dashboard() {
@@ -123,6 +123,21 @@ export default function Dashboard() {
                       title="複製題目"
                     >
                       <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-neutral-400 hover:text-indigo-600 hover:bg-indigo-50"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        const url = `${window.location.origin}${window.location.pathname}#/event/${project.id}`
+                        navigator.clipboard.writeText(url)
+                        alert("問卷連結已複製到剪貼簿！")
+                      }}
+                      title="複製問卷連結"
+                    >
+                      <LinkIcon className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
