@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { createProject } from "../../lib/api"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
@@ -7,8 +7,9 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Textarea } from "../../components/ui/Textarea"
 import FormBuilder from "../../components/admin/FormBuilder"
+import { Save, Trash2, LayoutTemplate } from "lucide-react"
 
-const TEMPLATES = {
+const STANDARD_TEMPLATES = {
   singing: {
     label: "歌唱比賽 (Singing Contest)",
     fields: [
@@ -33,7 +34,7 @@ const TEMPLATES = {
       { id: "5", label: "緊急聯絡人/電話", type: "text", required: true },
       { id: "6", label: "上車地點", type: "radio", options: "地點A, 地點B, 自行前往", required: true },
       { id: "7", label: "房型", type: "select", options: "兩人房, 四人房, 單人房 (補差價)", required: true },
-       { id: "8", label: "用餐", type: "radio", options: "葷, 素", required: true },
+      { id: "8", label: "用餐", type: "radio", options: "葷, 素", required: true },
     ]
   },
   assembly: {
@@ -45,12 +46,48 @@ const TEMPLATES = {
       { id: "4", label: "衣服尺寸", type: "select", options: "XS, S, M, L, XL, 2XL", required: true },
       { id: "5", label: "提案建議", type: "textarea", required: false },
     ]
+  },
+  workshop: {
+    label: "研習講座 (Workshop)",
+    fields: [
+      { id: "1", label: "姓名", type: "text", required: true },
+      { id: "2", label: "單位/職稱", type: "text", required: true },
+      { id: "3", label: "Email", type: "text", required: true },
+      { id: "4", label: "手機", type: "text", required: true },
+      { id: "5", label: "用餐需求", type: "radio", options: "葷, 素, 不用餐", required: true },
+      { id: "6", label: "提問", type: "textarea", required: false },
+    ]
+  },
+  volunteer: {
+    label: "志工服務 (Volunteer)",
+    fields: [
+      { id: "1", label: "姓名", type: "text", required: true },
+      { id: "2", label: "性別", type: "radio", options: "男, 女", required: true },
+      { id: "3", label: "身分證字號", type: "text", required: true },
+      { id: "4", label: "手機", type: "text", required: true },
+      { id: "5", label: "專長技能", type: "text", required: true },
+      { id: "6", label: "可服務時段", type: "select", options: "平日上午, 平日下午, 假日全天", required: true },
+    ]
+  },
+  reunion: {
+    label: "同學會 (Reunion)",
+    fields: [
+      { id: "1", label: "姓名", type: "text", required: true },
+      { id: "2", label: "畢業屆數/班級", type: "text", required: true },
+      { id: "3", label: "攜伴人數", type: "select", options: "0, 1, 2, 3+", required: true },
+      { id: "4", label: "手機", type: "text", required: true },
+      { id: "5", label: "用餐", type: "radio", options: "葷, 素", required: true },
+      { id: "6", label: "近況分享", type: "textarea", required: false },
+    ]
   }
 }
 
 export default function ProjectCreate() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [customTemplates, setCustomTemplates] = useState({})
+  const [selectedTemplate, setSelectedTemplate] = useState("")
+  
   const [formData, setFormData] = useState({
     title: "",
     organizer: "",
@@ -61,12 +98,64 @@ export default function ProjectCreate() {
     fields: [],
   })
 
-  const loadTemplate = (key) => {
-    if (confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
+  useEffect(() => {
+    // Load custom templates from localStorage
+    const saved = localStorage.getItem("customTemplates")
+    if (saved) {
+      try {
+        setCustomTemplates(JSON.parse(saved))
+      } catch (e) {
+        console.error("Failed to load templates", e)
+      }
+    }
+  }, [])
+
+  const handleApplyTemplate = (key) => {
+    if (!key) return
+    
+    let template = STANDARD_TEMPLATES[key]
+    if (!template) {
+        // Try custom templates
+        template = customTemplates[key]
+    }
+
+    if (template && confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
       setFormData(prev => ({
         ...prev,
-        fields: JSON.parse(JSON.stringify(TEMPLATES[key].fields)) // Deep copy
+        fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
       }))
+    }
+  }
+
+  const handleSaveTemplate = () => {
+    const name = prompt("請輸入範本名稱:")
+    if (!name) return
+
+    const newTemplateId = `custom_${Date.now()}`
+    const newTemplate = {
+        label: `${name} (自訂)`,
+        fields: formData.fields
+    }
+
+    const updated = { ...customTemplates, [newTemplateId]: newTemplate }
+    setCustomTemplates(updated)
+    localStorage.setItem("customTemplates", JSON.stringify(updated))
+    alert("範本已儲存！")
+    setSelectedTemplate(newTemplateId)
+  }
+
+  const handleDeleteTemplate = () => {
+    if (!selectedTemplate.startsWith("custom_")) {
+        alert("只能刪除自訂範本！")
+        return
+    }
+    
+    if (confirm("確定要刪除此範本嗎？")) {
+        const updated = { ...customTemplates }
+        delete updated[selectedTemplate]
+        setCustomTemplates(updated)
+        localStorage.setItem("customTemplates", JSON.stringify(updated))
+        setSelectedTemplate("")
     }
   }
 
@@ -90,13 +179,42 @@ export default function ProjectCreate() {
            <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">建立新專案</h1>
            <p className="text-neutral-500 mt-1">設定活動詳情與報名表單</p>
         </div>
-        <div className="flex items-center gap-3 bg-neutral-50 p-2 rounded-lg border border-neutral-200">
-           <span className="text-sm text-neutral-600 font-medium px-2">快速範本:</span>
-           {Object.keys(TEMPLATES).map(key => (
-             <Button key={key} size="sm" variant="ghost" type="button" onClick={() => loadTemplate(key)} className="text-primary-600 hover:text-primary-700 hover:bg-white hover:shadow-sm transition-all text-xs sm:text-sm">
-               {TEMPLATES[key].label.split(" ")[0]}
-             </Button>
-           ))}
+        
+        <div className="flex items-center gap-2 bg-neutral-100 p-2 rounded-lg border border-neutral-200 w-full sm:w-auto">
+           <LayoutTemplate className="w-4 h-4 text-neutral-500 ml-2" />
+           <select 
+             className="bg-transparent border-none text-sm focus:ring-0 text-neutral-700 font-medium w-full sm:w-48"
+             value={selectedTemplate}
+             onChange={(e) => {
+                setSelectedTemplate(e.target.value)
+                handleApplyTemplate(e.target.value)
+             }}
+           >
+             <option value="">-- 選擇快速範本 --</option>
+             <optgroup label="內建範本">
+                {Object.keys(STANDARD_TEMPLATES).map(key => (
+                    <option key={key} value={key}>{STANDARD_TEMPLATES[key].label}</option>
+                ))}
+             </optgroup>
+             {Object.keys(customTemplates).length > 0 && (
+                 <optgroup label="自訂範本">
+                    {Object.keys(customTemplates).map(key => (
+                        <option key={key} value={key}>{customTemplates[key].label}</option>
+                    ))}
+                 </optgroup>
+             )}
+           </select>
+           {selectedTemplate.startsWith("custom_") && (
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-neutral-400 hover:text-red-600"
+                    onClick={handleDeleteTemplate}
+                    title="刪除此範本"
+                >
+                    <Trash2 className="w-4 h-4" />
+                </Button>
+           )}
         </div>
       </div>
 
@@ -148,9 +266,21 @@ export default function ProjectCreate() {
         </Card>
 
         <Card className="shadow-lg border-t-4 border-secondary-500 overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-200 pb-6">
-            <CardTitle className="text-xl text-neutral-800">報名表單設計</CardTitle>
-            <CardDescription>自訂參加者需要填寫的欄位</CardDescription>
+          <CardHeader className="bg-gradient-to-r from-secondary-100 to-secondary-200 pb-6 flex flex-row justify-between items-center">
+            <div>
+                <CardTitle className="text-xl text-neutral-800">報名表單設計</CardTitle>
+                <CardDescription>自訂參加者需要填寫的欄位</CardDescription>
+            </div>
+            <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSaveTemplate}
+                className="bg-white/50 hover:bg-white text-secondary-700 border-secondary-200"
+            >
+                <Save className="w-4 h-4 mr-2" />
+                將目前表單存為範本
+            </Button>
           </CardHeader>
           <CardContent className="pt-6">
             <FormBuilder 

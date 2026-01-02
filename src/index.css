@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  /* Morandi Color Palette */
-  --color-primary-50: #f2f4f6;
-  --color-primary-100: #e3e7eb;
-  --color-primary-200: #c6d0d9;
-  --color-primary-300: #9badbd;
+  /* Morandi Color Palette (Darkened for reduced glare) */
+  --color-primary-50: #e8eaed; 
+  --color-primary-100: #d1d5db;
+  --color-primary-200: #b0bac5;
+  --color-primary-300: #8c9ba9;
   --color-primary-400: #7a8b99; /* Main Morandi Blue-Grey */
   --color-primary-500: #637080;
   --color-primary-600: #4d5866;
