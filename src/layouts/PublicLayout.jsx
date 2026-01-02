@@ -8,7 +8,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <footer className="py-8 text-center text-sm text-neutral-500 relative z-10">
-        © {new Date().getFullYear()} 活動報名系統
+        © 活動報名系統
       </footer>
     </div>
   )
