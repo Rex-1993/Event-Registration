@@ -6,8 +6,8 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
       id: i,
       top: Math.random() * 100, // %
       left: Math.random() * 100, // %
-      size: 150 + Math.random() * 300, // px
-      opacity: 0.1 + Math.random() * 0.2,
+      size: 200 + Math.random() * 300, // px
+      opacity: 0.2 + Math.random() * 0.3, // 0.2-0.5
       animationDuration: 15 + Math.random() * 20, // s
       delay: Math.random() * 5, // s
       color: themeColor,
@@ -20,14 +20,15 @@ export default function BackgroundShapes({ themeColor = "#6366f1", density = 6 }
       {shapes.map((shape) => (
         <div
           key={shape.id}
-          className={`absolute blur-3xl mix-blend-multiply transition-all duration-1000 ${shape.isBlob ? 'rounded-[30%_70%_70%_30%/30%_30%_70%_70%]' : 'rounded-full'}`}
+          className={`absolute transition-all duration-1000 ${shape.isBlob ? 'rounded-[30%_70%_70%_30%/30%_30%_70%_70%]' : 'rounded-full'}`}
           style={{
             top: `${shape.top}%`,
             left: `${shape.left}%`,
             width: `${shape.size}px`,
             height: `${shape.size}px`,
             backgroundColor: shape.color,
-            opacity: shape.opacity,
+            opacity: 0.3 + shape.opacity, // Boost base opacity
+            filter: 'blur(40px)', // moved blur here to ensure standard CSS handling
             animation: `float ${shape.animationDuration}s ease-in-out infinite`,
             animationDelay: `${shape.delay}s`,
             transform: 'translate(-50%, -50%)'
