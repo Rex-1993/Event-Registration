@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getProjects, deleteProject, createProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
+import { useModal } from "../../components/ui/ModalProvider"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy } from "lucide-react"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
@@ -9,6 +10,7 @@ import BackgroundShapes from "../../components/ui/BackgroundShapes"
 export default function Dashboard() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
+  const modal = useModal()
 
   useEffect(() => {
     fetchProjects()
@@ -28,12 +30,13 @@ export default function Dashboard() {
   const handleDelete = async (e, id, title) => {
     e.preventDefault()
     e.stopPropagation()
-    if (confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`)) {
+    const confirmed = await modal.confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`, "刪除確認")
+    if (confirmed) {
       try {
         await deleteProject(id)
         fetchProjects()
       } catch (error) {
-        alert("刪除專案時發生錯誤: " + error.message)
+        modal.alert("刪除專案時發生錯誤: " + error.message, "錯誤")
       }
     }
   }
@@ -41,7 +44,8 @@ export default function Dashboard() {
   const handleCopy = async (e, project) => {
     e.preventDefault()
     e.stopPropagation()
-    if (confirm(`確定要複製專案「${project.title}」嗎？`)) {
+    const confirmed = await modal.confirm(`確定要複製專案「${project.title}」嗎？`, "複製確認")
+    if (confirmed) {
        try {
          // Create a copy of the project data, removing the ID and appending (副本) to the title
          const { id, created_at, ...projectData } = project
@@ -52,7 +56,7 @@ export default function Dashboard() {
          await createProject(newProject)
          fetchProjects() // Refresh list
        } catch (error) {
-         alert("複製專案時發生錯誤: " + error.message)
+         modal.alert("複製專案時發生錯誤: " + error.message, "錯誤")
        }
     }
   }
