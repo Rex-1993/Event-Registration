@@ -60,7 +60,7 @@ export default function CheckRegistration() {
               required
               className="flex-1"
             />
-            <Button type="submit" isLoading={loading} className="px-6">
+            <Button type="submit" isLoading={loading} className="px-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-md">
               <Search className="w-5 h-5" />
             </Button>
           </form>
