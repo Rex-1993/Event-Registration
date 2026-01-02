@@ -136,11 +136,11 @@ export default function ProjectDetails() {
             <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
                {/* Hidden Canvas for generation */}
                <div className="hidden">
-                 <QRCodeCanvas value={publicUrl} size={300} id="qr-canvas" />
+                 <QRCodeCanvas value={publicUrl} size={300} id="qr-canvas" includeMargin={true} />
                </div>
                {/* Visible Image for easy saving */}
                {qrCodeUrl ? (
-                 <img src={qrCodeUrl} alt="Scan to Register" className="w-[200px] h-[200px] object-contain" />
+                 <img src={qrCodeUrl} alt="Scan to Register" className="w-[200px] h-[200px] object-contain border-4 border-white" />
                ) : (
                  <div className="w-[200px] h-[200px] bg-neutral-100 animate-pulse rounded" />
                )}
