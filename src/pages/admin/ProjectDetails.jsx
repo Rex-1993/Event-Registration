@@ -108,19 +108,19 @@ export default function ProjectDetails() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
-       <Link to="/admin/projects" className="text-neutral-500 hover:text-primary-600 flex items-center gap-2 transition-colors">
+       <Link to="/admin/projects" className="text-neutral-500 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 flex items-center gap-2 transition-colors">
          <ArrowLeft className="w-4 h-4" /> 返回專案列表
        </Link>
 
-       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-neutral-200 pb-8">
+       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-8">
          <div>
-           <h1 className="text-4xl font-extrabold text-neutral-900 tracking-tight">{project.title}</h1>
-           <p className="text-neutral-500 mt-2 text-lg">
-             <span className="font-semibold text-primary-600">{registrations.length}</span> / {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants} 已報名
+           <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight">{project.title}</h1>
+           <p className="text-neutral-500 dark:text-neutral-400 mt-2 text-lg">
+             <span className="font-semibold text-primary-600 dark:text-primary-400">{registrations.length}</span> / {parseInt(project.max_participants) === 0 ? "無限制" : project.max_participants} 已報名
            </p>
          </div>
          <div className="flex gap-3">
-           <Button variant="outline" onClick={() => setShowQR(!showQR)} className="shadow-sm hover:bg-neutral-50">
+           <Button variant="outline" onClick={() => setShowQR(!showQR)} className="shadow-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
              <QrCode className="w-4 h-4 mr-2" />
              {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
            </Button>
@@ -132,7 +132,7 @@ export default function ProjectDetails() {
        </div>
 
        {showQR && (
-         <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
+         <Card className="bg-white dark:bg-neutral-800 p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 dark:border-primary-900/50 max-w-sm mx-auto">
             <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
                {/* Hidden Canvas for generation */}
                <div className="hidden">
@@ -149,45 +149,45 @@ export default function ProjectDetails() {
               href={publicUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="mt-2 text-sm text-primary-600 hover:text-primary-700 break-all text-center flex items-center gap-1.5 font-medium group"
+              className="mt-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 break-all text-center flex items-center gap-1.5 font-medium group"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               {publicUrl}
             </a>
-            <p className="text-lg font-bold mt-4 text-neutral-800">掃描(或長按) QR Code 進行報名</p>
+            <p className="text-lg font-bold mt-4 text-neutral-800 dark:text-neutral-200">掃描(或長按) QR Code 進行報名</p>
          </Card>
        )}
 
-       <Card className="shadow-lg overflow-hidden border-t-0">
-         <CardHeader className="bg-neutral-50/50 border-b border-neutral-100">
-           <CardTitle className="text-xl">回傳資料列表</CardTitle>
-           <CardDescription>顯示所有參加者回傳的資料</CardDescription>
+       <Card className="shadow-lg overflow-hidden border-t-0 bg-white dark:bg-neutral-900">
+         <CardHeader className="bg-neutral-50/50 dark:bg-neutral-900/50 border-b border-neutral-100 dark:border-neutral-800">
+           <CardTitle className="text-xl text-neutral-900 dark:text-neutral-100">回傳資料列表</CardTitle>
+           <CardDescription className="text-neutral-500 dark:text-neutral-400">顯示所有參加者回傳的資料</CardDescription>
          </CardHeader>
          <CardContent className="p-0">
            <div className="overflow-x-auto">
              <table className="w-full text-sm text-left">
-               <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
+               <thead className="bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 uppercase font-semibold tracking-wider">
                  <tr>
-                   <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
+                   <th className="p-4 border-b border-neutral-200 dark:border-neutral-800 whitespace-nowrap">報名日期</th>
                    {/* Show all fields dynamically */}
                    {(project.fields || []).map(f => (
-                     <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label || f.id}</th>
+                     <th key={f.id} className="p-4 border-b border-neutral-200 dark:border-neutral-800 whitespace-nowrap">{f.label || f.id}</th>
                    ))}
                  </tr>
                </thead>
-               <tbody className="divide-y divide-neutral-100">
+               <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                  {registrations.length === 0 ? (
                    <tr>
-                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無回傳資料</td>
+                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400 dark:text-neutral-500">目前尚無回傳資料</td>
                    </tr>
                  ) : (
                    registrations.map(reg => (
-                     <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
-                       <td className="p-4 text-neutral-600 whitespace-nowrap">
+                     <tr key={reg.id} className="hover:bg-primary-50/30 dark:hover:bg-primary-900/10 transition-colors">
+                       <td className="p-4 text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                        </td>
                        {(project.fields || []).map(f => (
-                         <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
+                         <td key={f.id} className="p-4 text-neutral-800 dark:text-neutral-200 font-medium max-w-[200px] truncate">
                            {reg.data?.[f.id] || '-'}
                          </td>
                        ))}
