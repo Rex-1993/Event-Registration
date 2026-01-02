@@ -107,10 +107,13 @@ export default function ProjectDetails() {
            </p>
          </div>
          <div className="flex gap-3">
-           <Button variant="outline" onClick={() => setShowQR(!showQR)} className="shadow-sm hover:bg-neutral-50">
-             <QrCode className="w-4 h-4 mr-2" />
-             {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
-           </Button>
+            <Button 
+              onClick={() => setShowQR(!showQR)} 
+              className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 shadow-sm hover:shadow transition-all"
+            >
+              <QrCode className="w-4 h-4 mr-2" />
+              {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
+            </Button>
            <Button onClick={handleExport} className="shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
              <Download className="w-4 h-4 mr-2" />
              匯出 Excel
