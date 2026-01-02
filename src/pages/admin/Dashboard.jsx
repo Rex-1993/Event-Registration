@@ -60,7 +60,7 @@ export default function Dashboard() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex justify-between items-end border-b border-neutral-200 pb-6">
         <div>
-           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">專案管理</h1>
+           <h1 className="text-3xl font-extrabold text-neutral-900 tracking-tight">問卷管理</h1>
            <p className="text-neutral-500 mt-1">管理您的活動報名專案</p>
         </div>
         <Link to="/admin/projects/create">
@@ -118,7 +118,7 @@ export default function Dashboard() {
                       size="icon" 
                       className="h-8 w-8 text-neutral-400 hover:text-green-600 hover:bg-green-50"
                       onClick={(e) => handleCopy(e, project)}
-                      title="複製參加"
+                      title="複製題目"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>

@@ -38,7 +38,7 @@ export default function AdminLayout() {
             )}
           >
             <LayoutDashboard className="w-5 h-5" />
-            專案管理
+            問卷管理
           </Link>
         </nav>
 
@@ -58,7 +58,7 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 to-primary-200 -z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-primary-300 -z-10"></div>
         <div className="container mx-auto p-6 md:p-10 max-w-7xl">
           <Outlet />
         </div>
