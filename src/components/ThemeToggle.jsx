@@ -1,17 +1,8 @@
-import { useState, useEffect } from "react"
 import { Moon, Sun } from "lucide-react"
+import { useTheme } from "./ThemeProvider"
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-  )
-
-  useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove("light", "dark")
-    root.classList.add(theme)
-    localStorage.setItem("theme", theme)
-  }, [theme])
+  const { theme, setTheme } = useTheme()
 
   return (
     <button
