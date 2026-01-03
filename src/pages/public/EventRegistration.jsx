@@ -186,16 +186,15 @@ export default function EventRegistration() {
                查看活動詳情
              </Button>
 
-             <Link to={`/event/${id}/check`}>
-                <Button 
-                  variant="outline" 
-                  className="bg-white/20 hover:bg-white/30 border-white/40 text-white backdrop-blur-md rounded-full px-6 transition-all hover:scale-105"
-                  style={{ color: textColor, borderColor: textColor ? `${textColor}60` : undefined }}
-                >
-                  <Search className="w-4 h-4 mr-2" />
-                  報名狀態查詢
-                </Button>
-             </Link>
+             <Button 
+                variant="outline" 
+                onClick={() => setShowCheckStatus(true)}
+                className="bg-white/20 hover:bg-white/30 border-white/40 text-white backdrop-blur-md rounded-full px-6 transition-all hover:scale-105"
+                style={{ color: textColor, borderColor: textColor ? `${textColor}60` : undefined }}
+             >
+               <Search className="w-4 h-4 mr-2" />
+               報名狀態查詢
+             </Button>
            </div>
         </div>
       </div>
