@@ -49,7 +49,7 @@ export default function CheckRegistration() {
 
       {/* Hero Section */}
       <div 
-        className="relative w-full h-[320px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem]"
+        className="relative w-full min-h-[320px] shadow-lg flex flex-col px-4 pb-24 rounded-b-[3rem] overflow-hidden"
         style={{ 
           background: `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
           color: textColor
@@ -57,18 +57,22 @@ export default function CheckRegistration() {
       >
         <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px] rounded-b-[3rem]"></div>
         
-        <Link to={`/event/${id}`} className="absolute top-6 left-6 z-20">
-          <Button 
-            variant="ghost" 
-            className="text-white hover:bg-white/20 border border-white/30 backdrop-blur-md"
-            style={{ color: textColor, borderColor: textColor ? `${textColor}40` : undefined }}
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            返回報名頁面
-          </Button>
-        </Link>
+        {/* Top Bar for Navigation */}
+        <div className="relative z-20 w-full max-w-6xl mx-auto pt-6 flex justify-start">
+          <Link to={`/event/${id}`}>
+            <Button 
+              variant="ghost" 
+              className="text-white hover:bg-white/20 border border-white/30 backdrop-blur-md"
+              style={{ color: textColor, borderColor: textColor ? `${textColor}40` : undefined }}
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              返回報名頁面
+            </Button>
+          </Link>
+        </div>
 
-        <div className="relative z-10 space-y-4 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700">
+        {/* Title Section - Centered */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center space-y-4 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700 py-8 text-center">
            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
              {project.title}
            </h1>
