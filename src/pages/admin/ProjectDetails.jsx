@@ -283,7 +283,26 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
         
         <div className="p-6 overflow-y-auto custom-scrollbar">
           <form id="edit-form" onSubmit={handleSubmit} className="space-y-6">
-            {(project.fields || []).map(field => (
+            {(project.fields || []).map(field => {
+               if (field.type === "section_title") {
+                 return (
+                   <div key={field.id} className="pt-4 pb-1">
+                      <h3 className="text-base font-bold text-neutral-800 border-l-4 pl-2 border-primary-500">
+                        {field.label}
+                      </h3>
+                   </div>
+                 )
+               }
+               
+               if (field.type === "divider") {
+                 return (
+                   <div key={field.id} className="py-2">
+                      <hr className="border-t border-neutral-200" />
+                   </div>
+                 )
+               }
+
+               return (
                <div key={field.id} className="space-y-2">
                  <label className="text-sm font-medium text-neutral-700">
                     {field.label}
