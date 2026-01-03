@@ -191,6 +191,7 @@ export default function EventRegistration() {
   const [formData, setFormData] = useState({})
   const [isFull, setIsFull] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [showCheckStatus, setShowCheckStatus] = useState(false)
   
   useEffect(() => {
     async function load() {
