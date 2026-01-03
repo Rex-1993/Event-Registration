@@ -78,6 +78,56 @@ export default function EventRegistration() {
       <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={15} />
 
       {/* Hero Section */}
+// Curve Generator Component
+function DynamicCurves({ color }) {
+  // Use unique seed or just random on mount. Since we want consistency during session, useMemo with dependency [] is enough.
+  const curves = useState(() => {
+    const curveCount = 12;
+    return Array.from({ length: curveCount }).map((_, i) => {
+      // Random control points for cubic bezier
+      const startY = Math.random() * 100;
+      const endY = Math.random() * 100;
+      const cp1x = Math.random() * 50; 
+      const cp1y = Math.random() * 100;
+      const cp2x = 50 + Math.random() * 50; 
+      const cp2y = Math.random() * 100;
+      
+      return {
+        id: i,
+        d: `M 0 ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, 100 ${endY}`,
+        width: 2 + Math.random() * 10, // stroke width 2-12 (relative to coordinate system? No, absolute typically better, but here using percent coords)
+        // actually for SVG with viewBox 0 0 100 100, these are thin. Let's assume viewbox 0 0 100 100 and use small widths
+        strokeWidth: 0.2 + Math.random() * 1.5,
+        opacity: 0.1 + Math.random() * 0.3
+      };
+    });
+  })[0];
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        {curves.map((curve) => (
+          <path
+            key={curve.id}
+            d={curve.d}
+            fill="none"
+            stroke={color === 'white' ? 'white' : 'black'}
+            strokeWidth={curve.strokeWidth}
+            strokeOpacity={curve.opacity}
+            strokeLinecap="round"
+            style={{
+               mixBlendMode: 'overlay',
+               filter: 'blur(0.5px)'
+            }}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+// ... inside main component render ...
+
       <div 
         className="relative w-full h-[400px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem] overflow-hidden"
         style={{ 
@@ -85,13 +135,8 @@ export default function EventRegistration() {
           color: textColor
         }}
       >
-        {/* Geometric Pattern Overlay */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" 
-             style={{ 
-               backgroundImage: `radial-gradient(${textColor === '#ffffff' ? '#ffffff' : '#000000'} 2px, transparent 2px)`, 
-               backgroundSize: '30px 30px' 
-             }}>
-        </div>
+        {/* Dynamic Random Curves Background */}
+        <DynamicCurves color={textColor} />
         
         <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px] rounded-b-[3rem]"></div>
         
