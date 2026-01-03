@@ -10,18 +10,38 @@ import {
   DndContext, 
   closestCenter,
   KeyboardSensor,
-  PointerSensor, // Changed from Mouse/Touch to Pointer
+  PointerSensor,
   useSensor,
   useSensors,
   DragOverlay
 } from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
-// ... (imports remain)
+const FIELD_TYPES = [
+  { value: "text", label: "簡短回答" },
+  { value: "textarea", label: "詳細回答" },
+  { value: "number", label: "數字" },
+  { value: "email", label: "電子郵件" },
+  { value: "date", label: "日期" },
+  { value: "select", label: "下拉式選單" },
+  { value: "radio", label: "單選題" },
+  { value: "checkbox", label: "多選題" },
+]
 
 export default function FormBuilder({ value = [], onChange }) {
-  const [fields, setFields] = useState(value)
+  // Ensure value is never null/undefined for state
+  const [fields, setFields] = useState(value || [])
+  
   useEffect(() => {
-    setFields(value)
+    setFields(value || [])
   }, [value])
 
   // Configure sensors for interaction handling
@@ -65,7 +85,7 @@ export default function FormBuilder({ value = [], onChange }) {
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
+    if (active && over && active.id !== over.id) {
       setFields((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
@@ -76,6 +96,9 @@ export default function FormBuilder({ value = [], onChange }) {
     }
   }
 
+  // Safety check for rendering
+  const fieldList = fields || [];
+
   return (
     <div className="space-y-4">
       <DndContext 
@@ -85,10 +108,10 @@ export default function FormBuilder({ value = [], onChange }) {
         modifiers={[restrictToVerticalAxis]}
       >
         <SortableContext 
-          items={fields.map(f => f.id)}
+          items={fieldList.map(f => f.id)}
           strategy={verticalListSortingStrategy}
         >
-          {fields.map((field) => (
+          {fieldList.map((field) => (
             <SortableField 
                 key={field.id} 
                 field={field} 
@@ -127,16 +150,16 @@ function SortableField({ field, updateField, removeField }) {
   };
 
   return (
-    // Only setNodeRef and style here. No attributes or listeners!
     <div ref={setNodeRef} style={style} className="mb-4">
       <Card className={`relative group hover:border-primary-200 transition-colors ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
         <CardContent className="p-4 flex gap-4 items-start">
           <div 
             ref={setActivatorNodeRef}
+            // Orange color and v2.1 indicator for verification
             className="mt-3 text-orange-500 p-2 rounded cursor-grab active:cursor-grabbing hover:bg-orange-50 hover:text-orange-600 transition-colors touch-none flex items-center gap-1"
             title="拖曳以排序"
-            {...attributes} // Attributes moved here
-            {...listeners}  // Listeners stay here
+            {...attributes} 
+            {...listeners}
           >
             <GripVertical className="w-5 h-5" />
             <span className="text-[10px] font-mono opacity-50 select-none">(v2.1)</span>
