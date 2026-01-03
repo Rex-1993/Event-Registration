@@ -135,23 +135,29 @@ export default function ProjectDetails() {
           </div>
         </div>
 
-       {showQR && (
-         <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in zoom-in-95 fade-in slide-in-from-top-4 duration-300 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
-            <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
-              <QRCodeCanvas value={publicUrl} size={200} />
-            </div>
-            <a 
-              href={publicUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="mt-2 text-sm text-primary-600 hover:text-primary-700 break-all text-center flex items-center gap-1.5 font-medium group"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              {publicUrl}
-            </a>
-            <p className="text-lg font-bold mt-4 text-neutral-800">掃描 QR Code 進行報名</p>
-         </Card>
-       )}
+        {/* QR Code Section with Accordion Animation */}
+        <div 
+          className={`
+            overflow-hidden transition-all duration-500 ease-in-out
+            ${showQR ? "max-h-[500px] opacity-100 mb-8" : "max-h-0 opacity-0 mb-0"}
+          `}
+        >
+           <Card className="bg-white p-8 flex flex-col items-center justify-center shadow-xl border-2 border-primary-100 max-w-sm mx-auto transform transition-transform duration-500">
+              <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
+                <QRCodeCanvas value={publicUrl} size={200} />
+              </div>
+              <a 
+                href={publicUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="mt-2 text-sm text-primary-600 hover:text-primary-700 break-all text-center flex items-center gap-1.5 font-medium group"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                {publicUrl}
+              </a>
+              <p className="text-lg font-bold mt-4 text-neutral-800">掃描 QR Code 進行報名</p>
+           </Card>
+        </div>
 
        <Card className="shadow-lg overflow-hidden border-t-0">
          <CardHeader className="bg-neutral-50/50 border-b border-neutral-100">
