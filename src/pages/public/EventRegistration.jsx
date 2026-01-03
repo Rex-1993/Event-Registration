@@ -145,7 +145,7 @@ function CheckRegistrationModal({ isOpen, onClose, projectId, projectTheme }) {
     <div className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 ${isOpen ? "animate-in fade-in duration-300" : "animate-out fade-out duration-300 fill-mode-forwards"}`}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
       
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+
       
       <div className={`relative w-full max-w-md bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden ${isOpen ? "animate-in zoom-in-95 duration-300" : "animate-out zoom-out-95 duration-300 fill-mode-forwards"}`}>
          <div className="p-4 border-b border-neutral-100 flex justify-between items-center bg-neutral-50/50">
