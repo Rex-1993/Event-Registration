@@ -59,6 +59,20 @@ export default function FormBuilder({ value = [], onChange }) {
     })
   );
 
+  const addFieldAtIndex = (index) => {
+    const newField = {
+      id: crypto.randomUUID(),
+      label: "新問題",
+      type: "text",
+      required: false,
+      options: "" 
+    }
+    const newFields = [...fields];
+    newFields.splice(index, 0, newField);
+    setFields(newFields)
+    onChange(newFields)
+  }
+
   const addField = () => {
     const newField = {
       id: crypto.randomUUID(),
@@ -113,13 +127,24 @@ export default function FormBuilder({ value = [], onChange }) {
           items={fieldList.map(f => f.id)}
           strategy={verticalListSortingStrategy}
         >
-          {fieldList.map((field) => (
-            <SortableField 
-                key={field.id} 
-                field={field} 
-                updateField={updateField} 
-                removeField={removeField} 
-            />
+          {fieldList.map((field, index) => (
+            <div key={field.id} className="relative group/item">
+                <SortableField 
+                    field={field} 
+                    updateField={updateField} 
+                    removeField={removeField} 
+                />
+                
+                {/* Insert Button (Only visible on hover or always subtle) */}
+                <div className="absolute left-0 right-0 -bottom-5 flex justify-center z-10 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                    <div className="bg-white rounded-full shadow-sm border border-neutral-200 p-1 cursor-pointer hover:bg-primary-50 hover:border-primary-200 hover:text-primary-600 transition-colors"
+                         onClick={() => addFieldAtIndex(index + 1)}
+                         title="在此處插入新問題"
+                    >
+                        <Plus className="w-4 h-4 text-neutral-400 group-hover:text-primary-600" />
+                    </div>
+                </div>
+            </div>
           ))}
         </SortableContext>
       </DndContext>
