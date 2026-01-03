@@ -390,7 +390,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
                     />
                  )}
                </div>
-            })}
+            )})}
           </form>
         </div>
 
