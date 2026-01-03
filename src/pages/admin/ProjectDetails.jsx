@@ -181,7 +181,7 @@ export default function ProjectDetails() {
                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap w-24">操作</th>
                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
                    {/* Show first 3-4 fields dynamically */}
-                   {(project.fields || []).map(f => (
+                   {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
                      <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label || f.id}</th>
                    ))}
                  </tr>
@@ -208,7 +208,7 @@ export default function ProjectDetails() {
                        <td className="p-4 text-neutral-600 whitespace-nowrap">
                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                        </td>
-                       {(project.fields || []).map(f => (
+                       {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
                          <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
                            {reg.data?.[f.id] || '-'}
                          </td>
@@ -390,7 +390,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
                     />
                  )}
                </div>
-            ))}
+            })}
           </form>
         </div>
 
