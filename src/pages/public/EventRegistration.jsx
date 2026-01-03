@@ -90,6 +90,98 @@ function ActivityDetailsModal({ isOpen, onClose, title, description, projectThem
   )
 }
 
+function CheckRegistrationModal({ isOpen, onClose, projectId, projectTheme }) {
+  const [name, setName] = useState("")
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      setName("")
+      setResults(null)
+    }
+  }, [isOpen])
+
+  const handleSearch = async (e) => {
+    e.preventDefault()
+    if (!name.trim()) return
+    
+    setLoading(true)
+    try {
+      const data = await checkDuplicate(projectId, name.trim())
+      setResults(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+         <div className="p-4 border-b border-neutral-100 flex justify-between items-center bg-neutral-50/50">
+           <h3 className="font-bold text-xl text-neutral-800 flex items-center gap-2">
+             <Search className="w-5 h-5" style={{ color: projectTheme }} />
+             報名狀態查詢
+           </h3>
+           <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-neutral-100 rounded-full w-8 h-8">
+             <X className="w-5 h-5 text-neutral-500" />
+           </Button>
+         </div>
+
+         <div className="p-6">
+            <p className="text-neutral-500 text-sm mb-4">請輸入您的完整姓名以查詢是否已報名成功。</p>
+            <form onSubmit={handleSearch} className="flex gap-2 mb-6">
+              <Input 
+                placeholder="例: 王小明" 
+                value={name} 
+                onChange={e => setName(e.target.value)}
+                required
+                className="flex-1"
+              />
+              <Button type="submit" isLoading={loading} className="text-white border-0 shadow-sm" style={{ backgroundColor: projectTheme }}>
+                <Search className="w-4 h-4" />
+              </Button>
+            </form>
+
+            {results && (
+              <div className="space-y-4 animate-in slide-in-from-bottom-2 fade-in duration-300">
+                <h4 className="font-medium text-neutral-900 border-b pb-2 text-sm">查詢結果</h4>
+                {results.length === 0 ? (
+                  <div className="p-4 bg-neutral-50 rounded-lg text-neutral-500 text-center text-sm border border-dashed border-neutral-200">
+                    找不到 "{name}" 的資料
+                  </div>
+                ) : (
+                  <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar">
+                    {results.map((res, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-green-50/50 border border-green-200 rounded-lg text-green-800">
+                         <div className="flex items-center gap-2">
+                            <div className="p-1.5 bg-green-100 rounded-full">
+                              <UserCheck className="w-4 h-4 text-green-600" />
+                            </div>
+                            <div>
+                              <span className="font-bold block text-sm">{res.name}</span>
+                              <span className="text-[10px] text-green-600/80">已報名</span>
+                            </div>
+                         </div>
+                         <span className="text-xs font-medium bg-white/60 px-2 py-0.5 rounded border border-green-100">{res.registered_at.split(' ')[0]}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+         </div>
+      </div>
+    </div>
+  )
+}
+
 export default function EventRegistration() {
   const { id } = useParams()
   const navigate = useNavigate()
