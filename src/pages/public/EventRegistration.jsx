@@ -336,6 +336,15 @@ export default function EventRegistration() {
         description={project.description}
         projectTheme={project.theme_color}
       />
+
+      {/* Check Status Modal */}
+      <CheckRegistrationModal 
+        isOpen={showCheckStatus}
+        onClose={() => setShowCheckStatus(false)}
+        projectId={id}
+        projectTheme={project.theme_color}
+      />
     </div>
   )
+}
 }
