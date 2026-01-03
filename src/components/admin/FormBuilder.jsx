@@ -130,6 +130,7 @@ function SortableField({ field, updateField, removeField }) {
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef, // Critical: Need this to explicitly set the handle
     transform,
     transition,
     isDragging,
@@ -144,11 +145,12 @@ function SortableField({ field, updateField, removeField }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4 touch-manipulation" {...attributes}>
+    <div ref={setNodeRef} style={style} className="mb-4" {...attributes}>
       <Card className={`relative group hover:border-primary-200 transition-colors ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
         <CardContent className="p-4 flex gap-4 items-start">
           <div 
-            className="mt-3 text-neutral-400 p-2 rounded cursor-grab active:cursor-grabbing hover:bg-neutral-100 hover:text-neutral-600 transition-colors"
+            ref={setActivatorNodeRef}
+            className="mt-3 text-neutral-400 p-2 rounded cursor-grab active:cursor-grabbing hover:bg-neutral-100 hover:text-neutral-600 transition-colors touch-none"
             title="拖曳以排序"
             {...listeners}
           >
