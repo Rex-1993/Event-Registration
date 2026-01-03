@@ -158,3 +158,65 @@ function SortableField({ field, updateField, removeField }) {
           </div>
           
           <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="md:col-span-5 space-y-2">
+              <Label>標題</Label>
+              <Input 
+                value={field.label} 
+                onChange={(e) => updateField(field.id, { label: e.target.value })}
+                placeholder="請輸入問題標題"
+                className="focus:ring-primary-500"
+              />
+            </div>
+
+            <div className="md:col-span-3 space-y-2">
+              <Label>類型</Label>
+              <Select
+                value={field.type}
+                onChange={(e) => updateField(field.id, { type: e.target.value })}
+                className="focus:ring-primary-500"
+              >
+                {FIELD_TYPES.map(t => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
+              </Select>
+            </div>
+
+            {/* Options field for select/radio/checkbox */}
+            {["select", "radio", "checkbox"].includes(field.type) && (
+              <div className="md:col-span-4 space-y-2">
+                <Label>選項 (以逗號分隔)</Label>
+                <Input 
+                  value={field.options} 
+                  placeholder="選項A, 選項B, 選項C"
+                  onChange={(e) => updateField(field.id, { options: e.target.value })}
+                  className="focus:ring-primary-500"
+                />
+              </div>
+            )}
+            
+            <div className="md:col-span-12 flex items-center gap-4 mt-2">
+               <label className="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer hover:text-primary-600 transition-colors">
+                  <input 
+                    type="checkbox"
+                    className="rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                    checked={field.required}
+                    onChange={(e) => updateField(field.id, { required: e.target.checked })}
+                  />
+                  必填
+               </label>
+            </div>
+          </div>
+
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-neutral-400 hover:text-red-600 hover:bg-red-50 mt-1 transition-colors"
+            onClick={() => removeField(field.id)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
