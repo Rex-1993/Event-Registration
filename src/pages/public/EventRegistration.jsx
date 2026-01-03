@@ -104,11 +104,16 @@ function CheckRegistrationModal({ isOpen, onClose, projectId, projectTheme }) {
   const [name, setName] = useState("")
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       setName("")
       setResults(null)
+      setIsVisible(true)
+    } else {
+      const timer = setTimeout(() => setIsVisible(false), 300)
+      return () => clearTimeout(timer)
     }
   }, [isOpen])
 
@@ -126,18 +131,6 @@ function CheckRegistrationModal({ isOpen, onClose, projectId, projectTheme }) {
       setLoading(false)
     }
   }
-
-  if (!isOpen && !loading && !results && !name) return null; // Simple check for initial null state is tricky with animation, relying on isVisible
-
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    if (isOpen) setIsVisible(true)
-    else {
-      const timer = setTimeout(() => setIsVisible(false), 300)
-      return () => clearTimeout(timer)
-    }
-  }, [isOpen])
 
   if (!isVisible) return null;
 
