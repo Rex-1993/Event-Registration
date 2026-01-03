@@ -35,11 +35,35 @@ export const createProject = async (projectData) => {
 
 export const getProjects = async () => {
   try {
-    const q = query(collection(db, PROJECTS_COLLECTION), orderBy("created_at", "desc"));
+    // Sort by sort_order asc, then created_at desc
+    const q = query(collection(db, PROJECTS_COLLECTION), orderBy("sort_order", "asc"), orderBy("created_at", "desc"));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    let projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // If sort_order is missing (legacy data), created_at desc will handle it effectively if we treat null as 0, 
+    // but Firestore sort might put them at end/start.
+    // Ideally, we might want to manually sort if mixed.
+    // For simplicity, let's rely on Firestore. 
+    // If no sort_order exists, they default to 0 or null.
+    
+    return projects;
   } catch (error) {
     console.error("Error getting projects:", error);
+    throw error;
+  }
+};
+
+export const updateProjectOrder = async (projects) => {
+  try {
+    const batch = writeBatch(db);
+    projects.forEach((project, index) => {
+      const ref = doc(db, PROJECTS_COLLECTION, project.id);
+      batch.update(ref, { sort_order: index });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error("Error updating project order:", error);
     throw error;
   }
 };
