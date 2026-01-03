@@ -220,3 +220,101 @@ export default function ProjectDetails() {
     </div>
   )
 }
+
+function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdate }) {
+  const [formData, setFormData] = useState({})
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && registration) {
+      setFormData(registration.data || {})
+    }
+  }, [isOpen, registration])
+
+  const handleChange = (fieldId, value) => {
+    setFormData(prev => ({ ...prev, [fieldId]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    // Confirmation Dialog
+    if (!confirm("確定要修改這筆資料嗎？\n\n注意：此操作將直接覆蓋原始報名紀錄。")) {
+        return;
+    }
+
+    setSaving(true)
+    try {
+      // Find name field to update search_name index
+      const nameField = project.fields?.find(f => f.label === "姓名" || f.label === "Name") || project.fields?.[0]
+      const searchName = nameField ? (formData[nameField.id] || "") : ""
+
+      await onUpdate(registration.id, formData, searchName)
+      onClose()
+    } catch (error) {
+      alert("更新失敗: " + error.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-[50] flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[85vh]">
+        <div className="p-6 border-b border-neutral-100 flex justify-between items-center">
+          <h3 className="text-xl font-bold text-neutral-900">修改報名資料</h3>
+          <Button variant="ghost" size="icon" onClick={onClose}><Trash2 className="w-5 h-5 rotate-45" /></Button>
+        </div>
+        
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          <form id="edit-form" onSubmit={handleSubmit} className="space-y-6">
+            {(project.fields || []).map(field => (
+               <div key={field.id} className="space-y-2">
+                 <label className="text-sm font-medium text-neutral-700">
+                    {field.label}
+                    {field.required && <span className="text-red-500 ml-1">*</span>}
+                 </label>
+                 {field.type === "textarea" ? (
+                    <textarea 
+                        className="flex min-h-[80px] w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={formData[field.id] || ""}
+                        onChange={e => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                    />
+                 ) : field.type === "select" ? (
+                    <select
+                        className="flex h-10 w-full items-center justify-between rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={formData[field.id] || ""}
+                        onChange={e => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                    >
+                        <option value="">請選擇...</option>
+                        {field.options.split(",").map(opt => (
+                            <option key={opt.trim()} value={opt.trim()}>{opt.trim()}</option>
+                        ))}
+                    </select>
+                 ) : (
+                    <input 
+                        type={field.type}
+                        className="flex h-10 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={formData[field.id] || ""}
+                        onChange={e => handleChange(field.id, e.target.value)}
+                        required={field.required}
+                    />
+                 )}
+               </div>
+            ))}
+          </form>
+        </div>
+
+        <div className="p-4 border-t border-neutral-100 bg-neutral-50 flex justify-end gap-3 rounded-b-2xl">
+          <Button variant="outline" onClick={onClose}>取消</Button>
+          <Button form="edit-form" type="submit" isLoading={saving} className="bg-primary-600 hover:bg-primary-700 text-white">儲存修改</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
