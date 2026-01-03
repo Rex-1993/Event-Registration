@@ -76,7 +76,8 @@ function ActivityDetailsModal({ isOpen, onClose, title, description, projectThem
         
         <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
            <h4 className="text-2xl font-bold mb-6 text-neutral-900">{title}</h4>
-           <div className="prose prose-neutral max-w-none text-neutral-600 whitespace-pre-line leading-relaxed">
+           {/* Added whitespace-pre-wrap and break-words for proper text wrapping */}
+           <div className="prose prose-neutral max-w-none text-neutral-600 whitespace-pre-wrap break-words leading-relaxed">
              {description}
            </div>
         </div>
