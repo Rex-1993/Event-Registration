@@ -79,21 +79,26 @@ export default function EventRegistration() {
 
       {/* Hero Section */}
       <div 
-        className="relative w-full h-[360px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem]"
+        className="relative w-full h-[400px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem] overflow-hidden"
         style={{ 
           background: `linear-gradient(135deg, ${project.theme_color}, ${project.theme_color}dd)`,
           color: textColor
         }}
       >
+        {/* Geometric Pattern Overlay */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none" 
+             style={{ 
+               backgroundImage: `radial-gradient(${textColor === '#ffffff' ? '#ffffff' : '#000000'} 2px, transparent 2px)`, 
+               backgroundSize: '30px 30px' 
+             }}>
+        </div>
+        
         <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px] rounded-b-[3rem]"></div>
-        <div className="relative z-10 space-y-6 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700">
-           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-sm" style={{ color: textColor }}>
+        
+        <div className="relative z-10 space-y-4 max-w-5xl mx-auto animate-in slide-in-from-top-6 duration-700">
+           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-md leading-tight" style={{ color: textColor }}>
              {project.title}
            </h1>
-           <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto drop-shadow-sm space-y-4 opacity-90 text-left md:text-center" style={{ color: textColor }}>
-             <p><span className="font-bold opacity-70 text-base block md:inline md:mr-2">主辦單位：</span>{project.organizer}</p>
-             {project.co_organizer && <p><span className="font-bold opacity-70 text-base block md:inline md:mr-2">協辦單位：</span>{project.co_organizer}</p>}
-           </div>
         </div>
       </div>
 
@@ -233,6 +238,24 @@ export default function EventRegistration() {
                 </CardContent>
              </Card>
            </div>
+        </div>
+      </div>
+
+      {/* Organizer Info Footer */}
+      <div className="container mx-auto px-4 mt-12 mb-8 text-center animate-in fade-in duration-700 delay-300 relative z-10">
+        <div className="inline-block p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/50 shadow-sm space-y-2 max-w-lg w-full">
+            <p className="text-neutral-700 text-lg">
+              <span className="font-bold text-neutral-500 text-sm block mb-1">主辦單位</span>
+              {project.organizer}
+            </p>
+            {project.co_organizer && (
+              <div className="pt-2 mt-2 border-t border-neutral-200/50">
+                <p className="text-neutral-600">
+                  <span className="font-bold text-neutral-400 text-xs mr-2">協辦單位</span>
+                  {project.co_organizer}
+                </p>
+              </div>
+            )}
         </div>
       </div>
     </div>
