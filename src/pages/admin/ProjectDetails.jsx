@@ -178,6 +178,7 @@ export default function ProjectDetails() {
              <table className="w-full text-sm text-left">
                <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
                  <tr>
+                   <th className="p-4 border-b border-neutral-200 whitespace-nowrap w-24">操作</th>
                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
                    {/* Show first 3-4 fields dynamically */}
                    {(project.fields || []).map(f => (
@@ -193,6 +194,17 @@ export default function ProjectDetails() {
                  ) : (
                    registrations.map(reg => (
                      <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
+                       <td className="p-4 border-b border-neutral-100">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => setEditingReg(reg)}
+                            className="h-8 w-8 p-0 text-neutral-500 hover:text-primary-600 hover:bg-primary-50"
+                            title="修改資料"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                       </td>
                        <td className="p-4 text-neutral-600 whitespace-nowrap">
                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                        </td>
