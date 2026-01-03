@@ -235,7 +235,8 @@ export default function EventRegistration() {
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary-600 h-8 w-8" /></div>
   if (!project) return <div className="text-center py-20 text-neutral-500">找不到專案</div>
   
-  const textColor = getContrastYIQ(project.theme_color);
+  const themeColor = project.theme_color || "#6366f1";
+  const textColor = getContrastYIQ(themeColor);
 
   return (
     <div className="min-h-screen w-full font-sans relative overflow-x-hidden pb-20">
@@ -243,17 +244,17 @@ export default function EventRegistration() {
       <div className="fixed inset-0 -z-30 bg-white"></div>
       <div 
         className="fixed inset-0 -z-20 transition-colors duration-700" 
-        style={{ backgroundColor: `${project.theme_color}1f` }} // 1f is approx 12% opacity
+        style={{ backgroundColor: `${themeColor}1f` }} // 1f is approx 12% opacity
       ></div>
 
       {/* Dynamic Background Decoration */}
-      <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={15} />
+      <BackgroundShapes themeColor={themeColor} density={15} />
 
       {/* Hero Section */}
       <div 
         className="relative w-full h-[450px] shadow-lg flex flex-col items-center justify-center text-center px-4 pt-10 pb-24 rounded-b-[3rem] overflow-hidden transition-all duration-700"
         style={{ 
-          background: project.theme_color,  // Solid background to prevent see-through
+          background: themeColor,  // Solid background to prevent see-through
           color: textColor
         }}
       >
@@ -263,7 +264,7 @@ export default function EventRegistration() {
         {/* Dynamic Random Curves Background - Only on this header block */}
         <DynamicCurves color={textColor} />
         
-        <div className="relative z-10 space-y-6 max-w-4xl mx-auto animate-in slide-in-from-top-6 duration-700 flex flex-col items-center">
+        <div className="relative z-10 space-y-6 max-w-4xl mx-auto flex flex-col items-center">
            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-md leading-tight" style={{ color: textColor }}>
              {project.title}
            </h1>
