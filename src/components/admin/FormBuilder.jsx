@@ -133,12 +133,13 @@ function SortableField({ field, updateField, removeField }) {
         <CardContent className="p-4 flex gap-4 items-start">
           <div 
             ref={setActivatorNodeRef}
-            className="mt-3 text-orange-500 p-2 rounded cursor-grab active:cursor-grabbing hover:bg-orange-50 hover:text-orange-600 transition-colors touch-none"
+            className="mt-3 text-orange-500 p-2 rounded cursor-grab active:cursor-grabbing hover:bg-orange-50 hover:text-orange-600 transition-colors touch-none flex items-center gap-1"
             title="拖曳以排序"
             {...attributes} // Attributes moved here
             {...listeners}  // Listeners stay here
           >
             <GripVertical className="w-5 h-5" />
+            <span className="text-[10px] font-mono opacity-50 select-none">(v2.1)</span>
           </div>
           
           <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
