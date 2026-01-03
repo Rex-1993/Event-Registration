@@ -37,7 +37,75 @@ export default function FormBuilder({ value = [], onChange }) {
     })
   );
 
-// ... (rest of FormBuilder remains until SortableField)
+  const addField = () => {
+    const newField = {
+      id: crypto.randomUUID(),
+      label: "新問題",
+      type: "text",
+      required: false,
+      options: "" 
+    }
+    const newFields = [...fields, newField]
+    setFields(newFields)
+    onChange(newFields)
+  }
+
+  const updateField = (id, updates) => {
+    const newFields = fields.map(f => f.id === id ? { ...f, ...updates } : f)
+    setFields(newFields)
+    onChange(newFields)
+  }
+
+  const removeField = (id) => {
+    const newFields = fields.filter(f => f.id !== id)
+    setFields(newFields)
+    onChange(newFields)
+  }
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setFields((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        onChange(newItems); // Sync with parent immediately
+        return newItems;
+      });
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <DndContext 
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext 
+          items={fields.map(f => f.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {fields.map((field) => (
+            <SortableField 
+                key={field.id} 
+                field={field} 
+                updateField={updateField} 
+                removeField={removeField} 
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
+
+      <Button onClick={addField} variant="outline" type="button" className="w-full border-dashed border-2 py-6 text-neutral-500 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50/50 transition-all">
+        <Plus className="w-4 h-4 mr-2" />
+        新增問題
+      </Button>
+    </div>
+  )
+}
 
 function SortableField({ field, updateField, removeField }) {
   const {
