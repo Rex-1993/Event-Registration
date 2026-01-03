@@ -304,10 +304,63 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
                         required={field.required}
                     >
                         <option value="">請選擇...</option>
-                        {field.options.split(",").map(opt => (
+                        {field.options && field.options.split(",").map(opt => (
                             <option key={opt.trim()} value={opt.trim()}>{opt.trim()}</option>
                         ))}
                     </select>
+                 ) : field.type === "radio" ? (
+                    <div className="space-y-2">
+                       {field.options && field.options.split(",").map(opt => {
+                          const optionValue = opt.trim()
+                          return (
+                            <div key={optionValue} className="flex items-center space-x-2">
+                                <input 
+                                    type="radio" 
+                                    id={`${field.id}-${optionValue}`}
+                                    name={field.id}
+                                    value={optionValue}
+                                    checked={formData[field.id] === optionValue}
+                                    onChange={e => handleChange(field.id, e.target.value)}
+                                    className="h-4 w-4 border-neutral-300 text-primary-600 focus:ring-primary-600"
+                                    required={field.required}
+                                />
+                                <label htmlFor={`${field.id}-${optionValue}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    {optionValue}
+                                </label>
+                            </div>
+                          )
+                       })}
+                    </div>
+                 ) : field.type === "checkbox" ? (
+                    <div className="space-y-2">
+                       {field.options && field.options.split(",").map(opt => {
+                          const optionValue = opt.trim()
+                          const currentValues = Array.isArray(formData[field.id]) ? formData[field.id] : (formData[field.id] ? [formData[field.id]] : [])
+                          const isChecked = currentValues.includes(optionValue)
+                          
+                          return (
+                            <div key={optionValue} className="flex items-center space-x-2">
+                                <input 
+                                    type="checkbox" 
+                                    id={`${field.id}-${optionValue}`}
+                                    name={field.id}
+                                    value={optionValue}
+                                    checked={isChecked}
+                                    onChange={e => {
+                                        const newVal = e.target.checked 
+                                            ? [...currentValues, optionValue]
+                                            : currentValues.filter(v => v !== optionValue)
+                                        handleChange(field.id, newVal)
+                                    }}
+                                    className="h-4 w-4 border-neutral-300 text-primary-600 focus:ring-primary-600 rounded"
+                                />
+                                <label htmlFor={`${field.id}-${optionValue}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    {optionValue}
+                                </label>
+                            </div>
+                          )
+                       })}
+                    </div>
                  ) : (
                     <input 
                         type={field.type}
