@@ -35,17 +35,30 @@ export const createProject = async (projectData) => {
 
 export const getProjects = async () => {
   try {
-    // Sort by sort_order asc, then created_at desc
-    const q = query(collection(db, PROJECTS_COLLECTION), orderBy("sort_order", "asc"), orderBy("created_at", "desc"));
+    // Revert to ordering by created_at to ensure we get ALL projects (even those without sort_order)
+    const q = query(collection(db, PROJECTS_COLLECTION), orderBy("created_at", "desc"));
     const querySnapshot = await getDocs(q);
     
     let projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
-    // If sort_order is missing (legacy data), created_at desc will handle it effectively if we treat null as 0, 
-    // but Firestore sort might put them at end/start.
-    // Ideally, we might want to manually sort if mixed.
-    // For simplicity, let's rely on Firestore. 
-    // If no sort_order exists, they default to 0 or null.
+    // Client-side Sort:
+    // If sort_order exists, use it. If not, push to end (or keep relative time order).
+    // Using a large number for missing order ensures they append at the end initially, 
+    // or we can treat them as 0 if we want them at top.
+    
+    projects.sort((a, b) => {
+        const orderA = a.sort_order !== undefined ? a.sort_order : Number.MAX_SAFE_INTEGER;
+        const orderB = b.sort_order !== undefined ? b.sort_order : Number.MAX_SAFE_INTEGER;
+        
+        if (orderA !== orderB) {
+            return orderA - orderB;
+        }
+        // Secondary sort: created_at desc (if sort_order is same or both missing)
+        // created_at is a Firestore timestamp { seconds, nanoseconds }
+        const timeA = a.created_at?.seconds || 0;
+        const timeB = b.created_at?.seconds || 0;
+        return timeB - timeA;
+    });
     
     return projects;
   } catch (error) {
