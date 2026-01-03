@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-import { getProject, registerParticipant, getRegistrations } from "../../lib/api"
+import { getProject, registerParticipant, getRegistrations, checkDuplicate } from "../../lib/api"
 import { getContrastYIQ } from "../../lib/utils"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
@@ -8,7 +8,7 @@ import { Input } from "../../components/ui/Input"
 import { Label } from "../../components/ui/Label"
 import { Select } from "../../components/ui/Select"
 import { Textarea } from "../../components/ui/Textarea"
-import { Loader2, Search, Info, X } from "lucide-react"
+import { Loader2, Search, Info, X, UserCheck } from "lucide-react"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
 
 // Curve Generator Component
