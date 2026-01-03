@@ -14,7 +14,7 @@ export default function ProjectDetails() {
   const [registrations, setRegistrations] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [error, setError] = useState(null)
+
   const [showQR, setShowQR] = useState(false)
   const [editingReg, setEditingReg] = useState(null) // Registration object being edited
 
