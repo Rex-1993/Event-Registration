@@ -145,8 +145,12 @@ export default function EventRegistration() {
 
   return (
     <div className="min-h-screen w-full font-sans relative overflow-x-hidden pb-20">
-      {/* Fixed Background Layer */}
-      <div className="fixed inset-0 bg-[#f8f9fa] -z-20"></div>
+      {/* Fixed Background Layer - Using a 12% opacity of theme color for a deeper feel while keeping text readable, on top of white */}
+      <div className="fixed inset-0 -z-30 bg-white"></div>
+      <div 
+        className="fixed inset-0 -z-20 transition-colors duration-700" 
+        style={{ backgroundColor: `${project.theme_color}1f` }} // 1f is approx 12% opacity
+      ></div>
 
       {/* Dynamic Background Decoration */}
       <BackgroundShapes themeColor={project?.theme_color || "#6366f1"} density={15} />

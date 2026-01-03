@@ -112,14 +112,22 @@ export default function ProjectDetails() {
           <div className="flex gap-3">
              <Button 
                onClick={() => setShowQR(!showQR)} 
-               className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+               className={`
+                 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 
+                 text-white border-0 shadow-md hover:shadow-lg transition-all duration-200
+                 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 active:shadow-inner
+               `}
              >
                <QrCode className="w-4 h-4 mr-2 text-white" />
                {showQR ? "隱藏 QR Code" : "顯示 QR Code"}
              </Button>
              <Button 
                onClick={handleExport} 
-               className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+               className={`
+                 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 
+                 text-white border-0 shadow-md hover:shadow-lg transition-all duration-200
+                 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 active:shadow-inner
+               `}
              >
                <Download className="w-4 h-4 mr-2 text-white" />
                匯出 Excel
@@ -128,7 +136,7 @@ export default function ProjectDetails() {
         </div>
 
        {showQR && (
-         <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
+         <Card className="bg-white p-8 flex flex-col items-center justify-center animate-in zoom-in-95 fade-in slide-in-from-top-4 duration-300 shadow-xl border-2 border-primary-100 max-w-sm mx-auto">
             <div className="bg-white p-2 rounded-xl shadow-inner mb-4">
               <QRCodeCanvas value={publicUrl} size={200} />
             </div>
