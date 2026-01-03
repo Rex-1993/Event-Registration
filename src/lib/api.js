@@ -177,10 +177,29 @@ export const getRegistrations = async (projectId) => {
       where("project_id", "==", projectId),
       orderBy("created_at", "desc")
     );
-    const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error("Error getting registrations:", error);
+    throw error;
+  }
+};
+
+export const updateRegistration = async (registrationId, data, searchName) => {
+  try {
+    const docRef = doc(db, REGISTRATIONS_COLLECTION, registrationId);
+    
+    const updateData = {
+        data: data,
+        updated_at: serverTimestamp()
+    };
+    
+    if (searchName !== undefined) {
+        updateData.search_name = searchName;
+    }
+
+    await updateDoc(docRef, updateData);
+  } catch (error) {
+    console.error("Error updating registration:", error);
     throw error;
   }
 };

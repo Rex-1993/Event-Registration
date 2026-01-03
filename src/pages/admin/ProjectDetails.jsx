@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { getProject, getRegistrations, deleteProject } from "../../lib/api"
+import { getProject, getRegistrations, deleteProject, updateRegistration } from "../../lib/api"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
-import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink } from "lucide-react"
+import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink, Pencil } from "lucide-react"
 import * as XLSX from "xlsx"
 import { QRCodeCanvas } from "qrcode.react"
 
@@ -14,7 +14,9 @@ export default function ProjectDetails() {
   const [registrations, setRegistrations] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [error, setError] = useState(null)
   const [showQR, setShowQR] = useState(false)
+  const [editingReg, setEditingReg] = useState(null) // Registration object being edited
 
   useEffect(() => {
     async function loadData() {
@@ -76,6 +78,13 @@ export default function ProjectDetails() {
         alert("刪除專案時發生錯誤: " + error.message)
       }
     }
+  }
+
+  const handleUpdateRegistration = async (regId, data, searchName) => {
+    await updateRegistration(regId, data, searchName)
+    // Refresh local state
+    setRegistrations(prev => prev.map(r => r.id === regId ? { ...r, data, search_name: searchName } : r))
+    alert("資料更新成功！")
   }
 
   const publicUrl = `${window.location.href.split('#')[0]}#/event/${id}`
@@ -200,6 +209,14 @@ export default function ProjectDetails() {
            </div>
          </CardContent>
        </Card>
+
+       <EditRegistrationModal 
+         isOpen={!!editingReg} 
+         onClose={() => setEditingReg(null)} 
+         project={project}
+         registration={editingReg}
+         onUpdate={handleUpdateRegistration}
+       />
     </div>
   )
 }
