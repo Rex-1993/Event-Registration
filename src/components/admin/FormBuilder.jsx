@@ -7,7 +7,6 @@ import { Card, CardContent } from "../ui/Card"
 import { Plus, Trash2, GripVertical } from "lucide-react"
 
 import {
-import {
   DndContext, 
   closestCenter,
   KeyboardSensor,
