@@ -34,6 +34,8 @@ const FIELD_TYPES = [
   { value: "select", label: "下拉式選單" },
   { value: "radio", label: "單選題" },
   { value: "checkbox", label: "多選題" },
+  { value: "section_title", label: "純文字區段" },
+  { value: "divider", label: "分隔線" },
 ]
 
 export default function FormBuilder({ value = [], onChange }) {
@@ -165,12 +167,13 @@ function SortableField({ field, updateField, removeField }) {
           
           <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-5 space-y-2">
-              <Label>標題</Label>
+              <Label>{field.type === "section_title" ? "文字內容" : field.type === "divider" ? "備註 (不顯示)" : "標題"}</Label>
               <Input 
                 value={field.label} 
                 onChange={(e) => updateField(field.id, { label: e.target.value })}
-                placeholder="請輸入問題標題"
+                placeholder={field.type === "section_title" ? "請輸入說明文字..." : "請輸入問題標題"}
                 className="focus:ring-primary-500"
+                disabled={field.type === "divider"}
               />
             </div>
 
@@ -200,6 +203,7 @@ function SortableField({ field, updateField, removeField }) {
               </div>
             )}
             
+            {!["section_title", "divider"].includes(field.type) && (
             <div className="md:col-span-12 flex items-center gap-4 mt-2">
                <label className="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer hover:text-primary-600 transition-colors">
                   <input 
@@ -211,6 +215,7 @@ function SortableField({ field, updateField, removeField }) {
                   必填
                </label>
             </div>
+            )}
           </div>
 
           <Button 

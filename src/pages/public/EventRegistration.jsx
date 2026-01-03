@@ -342,6 +342,24 @@ export default function EventRegistration() {
                       
                       const focusStyle = { '--tw-ring-color': project.theme_color }
 
+                      if (field.type === "section_title") {
+                        return (
+                          <div key={field.id} className="pt-6 pb-2">
+                             <h3 className="text-lg font-bold text-neutral-800 border-l-4 pl-3" style={{ borderColor: project.theme_color }}>
+                               {field.label}
+                             </h3>
+                          </div>
+                        )
+                      }
+                      
+                      if (field.type === "divider") {
+                        return (
+                          <div key={field.id} className="py-4">
+                             <hr className="border-t border-neutral-200" />
+                          </div>
+                        )
+                      }
+
                       return (
                         <div key={field.id} className="space-y-3 group" style={focusStyle}>
                           <Label className="text-base font-medium text-neutral-700 group-hover:text-neutral-900 transition-colors pl-1">
