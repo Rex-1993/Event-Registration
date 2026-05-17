@@ -11,7 +11,8 @@ import {
   where, 
   orderBy,
   serverTimestamp,
-  writeBatch
+  writeBatch,
+  deleteField
 } from "firebase/firestore";
 
 const PROJECTS_COLLECTION = "projects";
@@ -40,6 +41,9 @@ export const getProjects = async () => {
     const querySnapshot = await getDocs(q);
     
     let projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // Filter out trashed projects
+    projects = projects.filter(p => !p.deleted_at);
     
     // Client-side Sort:
     // If sort_order exists, use it. If not, push to end (or keep relative time order).
@@ -106,7 +110,60 @@ export const updateProject = async (id, data) => {
   }
 };
 
-export const deleteProject = async (id) => {
+export const moveToTrash = async (id) => {
+  try {
+    const docRef = doc(db, PROJECTS_COLLECTION, id);
+    await updateDoc(docRef, { deleted_at: serverTimestamp() });
+  } catch (error) {
+    console.error("Error moving project to trash:", error);
+    throw error;
+  }
+};
+
+export const restoreFromTrash = async (id) => {
+  try {
+    const docRef = doc(db, PROJECTS_COLLECTION, id);
+    await updateDoc(docRef, { deleted_at: deleteField() });
+  } catch (error) {
+    console.error("Error restoring project from trash:", error);
+    throw error;
+  }
+};
+
+export const getTrashedProjects = async () => {
+  try {
+    const q = query(collection(db, PROJECTS_COLLECTION), orderBy("created_at", "desc"));
+    const querySnapshot = await getDocs(q);
+    
+    let projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    const now = new Date();
+    const trashed = [];
+    
+    for (const p of projects) {
+      if (p.deleted_at) {
+        // If deleted_at is just set (pending server write), it might be null when using serverTimestamp() locally without snapshot listeners.
+        // Fallback to now if toDate() is not yet available, though typically await updateDoc finishes first.
+        const deletedDate = p.deleted_at.toDate ? p.deleted_at.toDate() : new Date();
+        const diffTime = Math.abs(now - deletedDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays > 30) {
+          // Permanently delete if older than 30 days
+          await hardDeleteProject(p.id);
+        } else {
+          trashed.push({ ...p, days_left: 30 - diffDays });
+        }
+      }
+    }
+    return trashed;
+  } catch (error) {
+    console.error("Error getting trashed projects:", error);
+    throw error;
+  }
+};
+
+export const hardDeleteProject = async (id) => {
   try {
     const batch = writeBatch(db);
     

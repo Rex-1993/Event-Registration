@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Outlet, Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, LogOut, Menu, X, ChevronLeft, ChevronRight, ClipboardList } from "lucide-react"
+import { LayoutDashboard, LogOut, Menu, X, ChevronLeft, ChevronRight, ClipboardList, Trash2 } from "lucide-react"
 import { cn } from "../lib/utils"
 import BackgroundShapes from "../components/ui/BackgroundShapes"
 
@@ -40,6 +40,19 @@ export default function AdminLayout() {
             >
               <ClipboardList className="w-5 h-5 text-primary-600" />
               問卷管理
+            </Link>
+            <Link
+              to="/admin/trash"
+              onClick={() => setIsMobileOpen(false)}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                location.pathname.startsWith("/admin/trash")
+                  ? "bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-100"
+                  : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+              )}
+            >
+              <Trash2 className="w-5 h-5 text-primary-600" />
+              回收桶
             </Link>
             <hr className="border-neutral-100" />
             <Link
@@ -98,6 +111,21 @@ export default function AdminLayout() {
           >
             <ClipboardList className="w-5 h-5 shrink-0" />
             {!isCollapsed && <span className="animate-in fade-in duration-300">問卷管理</span>}
+          </Link>
+
+          <Link
+            to="/admin/trash"
+            className={cn(
+              "flex items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200",
+              isCollapsed ? "h-11 w-11 p-0 justify-center mx-auto" : "px-4 py-3",
+              location.pathname.startsWith("/admin/trash")
+                ? "bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-100"
+                : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+            )}
+            title={isCollapsed ? "回收桶" : undefined}
+          >
+            <Trash2 className="w-5 h-5 shrink-0" />
+            {!isCollapsed && <span className="animate-in fade-in duration-300">回收桶</span>}
           </Link>
         </nav>
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { dialog } from "../../lib/dialog"
 import { Link } from "react-router-dom"
-import { getProjects, deleteProject, createProject, getRegistrations, updateProjectOrder, updateProject } from "../../lib/api"
+import { getProjects, moveToTrash, createProject, getRegistrations, updateProjectOrder, updateProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon, GripVertical, Pin } from "lucide-react"
@@ -232,12 +232,13 @@ export default function Dashboard() {
       return
     }
 
-    if (await dialog.confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`, "確認刪除專案")) {
+    if (await dialog.confirm(`確定要把專案「${title}」移至回收桶嗎？\n專案將在回收桶保留 30 天。`, "移至回收桶")) {
       try {
-        await deleteProject(id)
+        await moveToTrash(id)
+        await dialog.alert(`專案已移至回收桶，保留 30 天。`)
         fetchProjects()
       } catch (error) {
-        await dialog.alert("刪除專案時發生錯誤: " + error.message, "錯誤")
+        await dialog.alert("移至回收桶時發生錯誤: " + error.message, "錯誤")
       }
     }
   }

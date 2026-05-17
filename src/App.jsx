@@ -10,6 +10,7 @@ import EventRegistration from "./pages/public/EventRegistration"
 import CheckRegistration from "./pages/public/CheckRegistration"
 import RegistrationSuccess from "./pages/public/RegistrationSuccess"
 import DialogContainer from "./components/DialogContainer"
+import Trash from "./pages/admin/Trash"
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="projects/create" element={<ProjectCreate />} />
           <Route path="projects/:id/edit" element={<ProjectEdit />} />
           <Route path="projects/:id" element={<ProjectDetails />} />
+          <Route path="trash" element={<Trash />} />
           {/* Add more admin routes here */}
         </Route>
 
