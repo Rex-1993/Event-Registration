@@ -222,43 +222,43 @@ export default function ProjectDetails() {
          </CardHeader>
          <CardContent className="p-0">
            <div className="overflow-x-auto">
-             <table className="w-full text-sm text-left">
-               <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
+             <table className="w-full text-sm text-left border-collapse border border-neutral-200">
+               <thead className="bg-neutral-50 text-neutral-800 uppercase font-semibold tracking-wider">
                   <tr>
-                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap w-24">操作</th>
+                    <th className="py-2.5 px-3 border-b border-r border-neutral-200 whitespace-nowrap w-24 text-center">操作</th>
                     <th 
                       onClick={() => handleSort("created_at")}
-                      className="p-4 border-b border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group"
+                      className="py-2.5 px-3 border-b border-r border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group"
                     >
-                      <div className="flex items-center gap-1.5">
-                        報名日期
+                      <div className="flex items-center justify-between gap-1.5">
+                        <span>報名日期</span>
                         {sortField === "created_at" ? (
-                          sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                          sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600 shrink-0" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600 shrink-0" />
                         ) : (
-                          <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                         )}
                       </div>
                     </th>
                     {/* Show first 3-4 fields dynamically */}
-                    {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
+                    {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map((f, index, arr) => (
                       <th 
                         key={f.id} 
                         onClick={() => handleSort(f.id)}
-                        className="p-4 border-b border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group"
+                        className={`py-2.5 px-3 border-b ${index === arr.length - 1 ? '' : 'border-r'} border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group`}
                       >
-                        <div className="flex items-center gap-1.5">
-                          {f.label || f.id}
+                        <div className="flex items-center justify-between gap-1.5">
+                          <span>{f.label || f.id}</span>
                           {sortField === f.id ? (
-                            sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                            sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600 shrink-0" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600 shrink-0" />
                           ) : (
-                            <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                           )}
                         </div>
                       </th>
                     ))}
                   </tr>
                 </thead>
-               <tbody className="divide-y divide-neutral-100">
+               <tbody className="divide-y divide-neutral-200">
                   {sortedRegistrations.length === 0 ? (
                     <tr>
                       <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
@@ -266,22 +266,25 @@ export default function ProjectDetails() {
                   ) : (
                     sortedRegistrations.map(reg => (
                       <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
-                        <td className="p-4 border-b border-neutral-100">
+                        <td className="py-2 px-3 border-r border-neutral-200 text-center">
                            <Button 
                              variant="ghost" 
                              size="sm"
                              onClick={() => setEditingReg(reg)}
-                             className="h-8 w-8 p-0 text-neutral-500 hover:text-primary-600 hover:bg-primary-50"
+                             className="h-7 w-7 p-0 text-neutral-500 hover:text-primary-600 hover:bg-primary-50"
                              title="修改資料"
                            >
-                             <Pencil className="w-4 h-4" />
+                             <Pencil className="w-3.5 h-3.5" />
                            </Button>
                         </td>
-                        <td className="p-4 text-neutral-600 whitespace-nowrap">
+                        <td className="py-2 px-3 text-neutral-600 whitespace-nowrap border-r border-neutral-200">
                           {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
                         </td>
-                        {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
-                          <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
+                        {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map((f, index, arr) => (
+                          <td 
+                            key={f.id} 
+                            className={`py-2 px-3 text-neutral-800 font-medium max-w-[200px] truncate ${index === arr.length - 1 ? '' : 'border-r border-neutral-200'}`}
+                          >
                             {reg.data?.[f.id] || '-'}
                           </td>
                         ))}
