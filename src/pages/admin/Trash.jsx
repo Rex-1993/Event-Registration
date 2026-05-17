@@ -81,7 +81,7 @@ export default function Trash() {
           variant="outline" 
           onClick={handleEmptyTrash}
           disabled={loading || projects.length === 0}
-          className="text-red-600 hover:bg-red-50 hover:text-red-700 border-red-200"
+          className="w-full sm:w-auto bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border-red-200 hover:border-red-500 transition-colors shadow-sm"
         >
           <Trash2 className="w-4 h-4 mr-2" />
           清空回收桶
