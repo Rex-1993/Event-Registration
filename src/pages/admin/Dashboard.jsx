@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { dialog } from "../../lib/dialog"
 import { Link } from "react-router-dom"
-import { getProjects, deleteProject, createProject, getRegistrations, updateProjectOrder } from "../../lib/api"
+import { getProjects, deleteProject, createProject, getRegistrations, updateProjectOrder, updateProject } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent } from "../../components/ui/Card"
 import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon, GripVertical, Pin } from "lucide-react"
