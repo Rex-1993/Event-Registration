@@ -175,6 +175,19 @@ function SortableField({ field, updateField, removeField }) {
     isDragging,
   } = useSortable({ id: field.id });
   
+  // Local state to isolate typing re-renders from the parent state, making typing 100% lag-free
+  const [localLabel, setLocalLabel] = useState(field.label || "")
+  const [localOptions, setLocalOptions] = useState(field.options || "")
+
+  // Keep local state in sync when parent fields load or reset (e.g., when a template is loaded)
+  useEffect(() => {
+    setLocalLabel(field.label || "")
+  }, [field.label])
+
+  useEffect(() => {
+    setLocalOptions(field.options || "")
+  }, [field.options])
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: isDragging ? 'none' : transition,
@@ -185,7 +198,8 @@ function SortableField({ field, updateField, removeField }) {
 
   return (
     <div ref={setNodeRef} style={style} className="mb-4 will-change-transform [backface-visibility:hidden] [-webkit-backface-visibility:hidden]">
-      <Card className={`relative group hover:border-primary-200 transition-colors ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
+      {/* We add backdrop-blur-none bg-white to bypass heavy stacked multi-pass pixel blur rendering on mobile GPUs */}
+      <Card className={`relative group hover:border-primary-200 transition-colors backdrop-blur-none bg-white ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
         <CardContent className="p-4 flex gap-4 items-start">
           <div 
             ref={setActivatorNodeRef}
@@ -201,8 +215,9 @@ function SortableField({ field, updateField, removeField }) {
             <div className="md:col-span-5 space-y-2">
               <Label>{field.type === "section_title" ? "文字內容" : field.type === "divider" ? "備註 (不顯示)" : "標題"}</Label>
               <Input 
-                value={field.label} 
-                onChange={(e) => updateField(field.id, { label: e.target.value })}
+                value={localLabel} 
+                onChange={(e) => setLocalLabel(e.target.value)}
+                onBlur={() => updateField(field.id, { label: localLabel })}
                 placeholder={field.type === "section_title" ? "請輸入說明文字..." : "請輸入問題標題"}
                 className="focus:ring-primary-500"
                 disabled={field.type === "divider"}
@@ -227,9 +242,10 @@ function SortableField({ field, updateField, removeField }) {
               <div className="md:col-span-4 space-y-2">
                 <Label>選項 (以逗號分隔)</Label>
                 <Input 
-                  value={field.options} 
+                  value={localOptions} 
                   placeholder="選項A, 選項B, 選項C"
-                  onChange={(e) => updateField(field.id, { options: e.target.value })}
+                  onChange={(e) => setLocalOptions(e.target.value)}
+                  onBlur={() => updateField(field.id, { options: localOptions })}
                   className="focus:ring-primary-500"
                 />
               </div>
