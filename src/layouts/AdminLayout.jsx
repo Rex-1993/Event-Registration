@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Outlet, Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { LayoutDashboard, LogOut, Menu, X, ChevronLeft, ChevronRight, ClipboardList } from "lucide-react"
 import { cn } from "../lib/utils"
 import BackgroundShapes from "../components/ui/BackgroundShapes"
 
@@ -38,7 +38,7 @@ export default function AdminLayout() {
                   : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
               )}
             >
-              <LayoutDashboard className="w-5 h-5 text-primary-600" />
+              <ClipboardList className="w-5 h-5 text-primary-600" />
               問卷管理
             </Link>
             <hr className="border-neutral-100" />
@@ -96,7 +96,7 @@ export default function AdminLayout() {
             )}
             title={isCollapsed ? "問卷管理" : undefined}
           >
-            <LayoutDashboard className="w-5 h-5 shrink-0" />
+            <ClipboardList className="w-5 h-5 shrink-0" />
             {!isCollapsed && <span className="animate-in fade-in duration-300">問卷管理</span>}
           </Link>
         </nav>
