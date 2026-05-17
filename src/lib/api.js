@@ -234,3 +234,14 @@ export const checkDuplicate = async (projectId, name) => {
     throw error;
   }
 };
+
+export const deleteRegistration = async (registrationId) => {
+  try {
+    const docRef = doc(db, REGISTRATIONS_COLLECTION, registrationId);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Error deleting registration:", error);
+    throw error;
+  }
+};
+
