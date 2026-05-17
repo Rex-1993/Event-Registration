@@ -6,7 +6,7 @@ import BackgroundShapes from "../components/ui/BackgroundShapes"
 
 export default function AdminLayout() {
   const location = useLocation()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(true)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   return (
