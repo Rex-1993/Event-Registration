@@ -50,9 +50,15 @@ export default function ProjectCreate() {
     }
 
     if (template && await dialog.confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
+      // Dynamically generate unique UUIDs for all template fields to avoid React key collisions and dnd-kit cache bugs
+      const freshFields = template.fields.map(field => ({
+        ...field,
+        id: crypto.randomUUID ? crypto.randomUUID() : `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      }));
+
       setFormData(prev => ({
         ...prev,
-        fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
+        fields: freshFields
       }))
     }
   }
