@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { dialog } from "../../lib/dialog"
 import { getTrashedProjects, hardDeleteProject, restoreFromTrash } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
-import { Calendar, Trash2, RotateCcw, AlertTriangle } from "lucide-react"
+import { Link } from "react-router-dom"
+import { ArrowRight, Trash2, RotateCcw, AlertTriangle } from "lucide-react"
 
 export default function Trash() {
   const [projects, setProjects] = useState([])
@@ -110,11 +111,13 @@ export default function Trash() {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4 text-sm text-neutral-500">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    活動日期: {project.start_date || "未設定"} ~ {project.end_date || "未設定"}
-                  </div>
+                <div className="mt-2">
+                  <Link to={`/admin/projects/${project.id}`}>
+                    <Button variant="outline" size="sm" className="h-8 px-3 text-xs gap-1 hover:border-primary-300 hover:text-primary-700">
+                      <span>詳情</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
