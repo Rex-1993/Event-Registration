@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { getProject, getRegistrations, deleteProject, updateRegistration, deleteRegistration } from "../../lib/api"
+import { getProject, getRegistrations, deleteProject, updateRegistration } from "../../lib/api"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
-import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink, Pencil, X } from "lucide-react"
+import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink, Pencil } from "lucide-react"
 import * as XLSX from "xlsx"
 import { QRCodeCanvas } from "qrcode.react"
 
@@ -85,17 +85,6 @@ export default function ProjectDetails() {
     // Refresh local state
     setRegistrations(prev => prev.map(r => r.id === regId ? { ...r, data, search_name: searchName } : r))
     alert("資料更新成功！")
-  }
-
-  const handleDeleteRegistration = async (regId) => {
-    try {
-      await deleteRegistration(regId)
-      setRegistrations(prev => prev.filter(r => r.id !== regId))
-      setEditingReg(null)
-      alert("資料已刪除")
-    } catch (error) {
-      alert("刪除失敗: " + error.message)
-    }
   }
 
   const publicUrl = `${window.location.href.split('#')[0]}#/event/${id}`
@@ -239,13 +228,12 @@ export default function ProjectDetails() {
          project={project}
          registration={editingReg}
          onUpdate={handleUpdateRegistration}
-         onDelete={handleDeleteRegistration}
        />
     </div>
   )
 }
 
-function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdate, onDelete }) {
+function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdate }) {
   const [formData, setFormData] = useState({})
   const [saving, setSaving] = useState(false)
 
@@ -257,12 +245,6 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
 
   const handleChange = (fieldId, value) => {
     setFormData(prev => ({ ...prev, [fieldId]: value }))
-  }
-
-  const handleDeleteClick = () => {
-    if (confirm("是否確認刪除此筆資料？")) {
-      onDelete(registration.id)
-    }
   }
 
   const handleSubmit = async (e) => {
@@ -296,7 +278,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
       <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[85vh]">
         <div className="p-6 border-b border-neutral-100 flex justify-between items-center">
           <h3 className="text-xl font-bold text-neutral-900">修改報名資料</h3>
-          <Button variant="ghost" size="icon" onClick={onClose}><X className="w-5 h-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={onClose}><Trash2 className="w-5 h-5 rotate-45" /></Button>
         </div>
         
         <div className="p-6 overflow-y-auto custom-scrollbar">
@@ -412,12 +394,9 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
           </form>
         </div>
 
-        <div className="p-4 border-t border-neutral-100 bg-neutral-50 flex justify-between items-center rounded-b-2xl">
-          <Button type="button" variant="ghost" onClick={handleDeleteClick} className="text-red-600 hover:bg-red-50 hover:text-red-700 font-medium">刪除這筆資料</Button>
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={onClose}>取消</Button>
-            <Button form="edit-form" type="submit" isLoading={saving} className="bg-primary-600 hover:bg-primary-700 text-white">儲存修改</Button>
-          </div>
+        <div className="p-4 border-t border-neutral-100 bg-neutral-50 flex justify-end gap-3 rounded-b-2xl">
+          <Button variant="outline" onClick={onClose}>取消</Button>
+          <Button form="edit-form" type="submit" isLoading={saving} className="bg-primary-600 hover:bg-primary-700 text-white">儲存修改</Button>
         </div>
       </div>
     </div>
