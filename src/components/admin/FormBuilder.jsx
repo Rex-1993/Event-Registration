@@ -10,7 +10,8 @@ import {
   DndContext, 
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay
@@ -49,9 +50,15 @@ export default function FormBuilder({ value = [], onChange }) {
   // Configure sensors for interaction handling
   // Using PointerSensor with distance constraint is the most robust way to handle both mouse and touch without conflicts
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
         activationConstraint: {
-            distance: 5, 
+            distance: 5, // Instant but safe activation for desktop mouse
+        },
+    }),
+    useSensor(TouchSensor, {
+        activationConstraint: {
+            delay: 150, // Long press constraint to allow native mobile scrolling without lag/conflict
+            tolerance: 6, // Prevents tiny movements from cancelling the press
         },
     }),
     useSensor(KeyboardSensor, {
@@ -170,14 +177,14 @@ function SortableField({ field, updateField, removeField }) {
   
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition,
     opacity: isDragging ? 0.4 : 1,
     zIndex: isDragging ? 999 : "auto",
     position: "relative",
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-4">
+    <div ref={setNodeRef} style={style} className="mb-4 will-change-transform [backface-visibility:hidden] [-webkit-backface-visibility:hidden]">
       <Card className={`relative group hover:border-primary-200 transition-colors ${isDragging ? 'border-primary-500 ring-2 ring-primary-200 shadow-xl' : ''}`}>
         <CardContent className="p-4 flex gap-4 items-start">
           <div 
