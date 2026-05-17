@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { getProject, getRegistrations, deleteProject, updateRegistration, deleteRegistration } from "../../lib/api"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card"
-import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink, Pencil, X } from "lucide-react"
+import { Loader2, Download, QrCode, ArrowLeft, Trash2, ExternalLink, Pencil, X, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import * as XLSX from "xlsx"
 import { QRCodeCanvas } from "qrcode.react"
 
@@ -17,6 +17,8 @@ export default function ProjectDetails() {
 
   const [showQR, setShowQR] = useState(false)
   const [editingReg, setEditingReg] = useState(null) // Registration object being edited
+  const [sortField, setSortField] = useState("created_at")
+  const [sortDirection, setSortDirection] = useState("desc")
 
   useEffect(() => {
     async function loadData() {
@@ -97,6 +99,40 @@ export default function ProjectDetails() {
       alert("刪除失敗: " + error.message)
     }
   }
+
+  const handleSort = (fieldId) => {
+    if (sortField === fieldId) {
+      setSortDirection(prev => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortField(fieldId)
+      setSortDirection("desc")
+    }
+  }
+
+  const sortedRegistrations = useMemo(() => {
+    return [...registrations].sort((a, b) => {
+      let valA, valB
+
+      if (sortField === "created_at") {
+        valA = a.created_at ? a.created_at.seconds : 0
+        valB = b.created_at ? b.created_at.seconds : 0
+      } else {
+        valA = a.data?.[sortField] ?? ""
+        valB = b.data?.[sortField] ?? ""
+      }
+
+      if (typeof valA === "number" && typeof valB === "number") {
+        return sortDirection === "asc" ? valA - valB : valB - valA
+      }
+
+      const strA = String(valA).toLowerCase()
+      const strB = String(valB).toLowerCase()
+      
+      return sortDirection === "asc" 
+        ? strA.localeCompare(strB, "zh-Hant") 
+        : strB.localeCompare(strA, "zh-Hant")
+    })
+  }, [registrations, sortField, sortDirection])
 
   const publicUrl = `${window.location.href.split('#')[0]}#/event/${id}`
 
@@ -188,46 +224,71 @@ export default function ProjectDetails() {
            <div className="overflow-x-auto">
              <table className="w-full text-sm text-left">
                <thead className="bg-neutral-50 text-neutral-700 uppercase font-semibold tracking-wider">
-                 <tr>
-                   <th className="p-4 border-b border-neutral-200 whitespace-nowrap w-24">操作</th>
-                   <th className="p-4 border-b border-neutral-200 whitespace-nowrap">報名日期</th>
-                   {/* Show first 3-4 fields dynamically */}
-                   {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
-                     <th key={f.id} className="p-4 border-b border-neutral-200 whitespace-nowrap">{f.label || f.id}</th>
-                   ))}
-                 </tr>
-               </thead>
+                  <tr>
+                    <th className="p-4 border-b border-neutral-200 whitespace-nowrap w-24">操作</th>
+                    <th 
+                      onClick={() => handleSort("created_at")}
+                      className="p-4 border-b border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        報名日期
+                        {sortField === "created_at" ? (
+                          sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        )}
+                      </div>
+                    </th>
+                    {/* Show first 3-4 fields dynamically */}
+                    {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
+                      <th 
+                        key={f.id} 
+                        onClick={() => handleSort(f.id)}
+                        className="p-4 border-b border-neutral-200 whitespace-nowrap cursor-pointer select-none hover:bg-neutral-100/80 transition-colors group"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {f.label || f.id}
+                          {sortField === f.id ? (
+                            sortDirection === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                          ) : (
+                            <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          )}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
                <tbody className="divide-y divide-neutral-100">
-                 {registrations.length === 0 ? (
-                   <tr>
-                     <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
-                   </tr>
-                 ) : (
-                   registrations.map(reg => (
-                     <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
-                       <td className="p-4 border-b border-neutral-100">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => setEditingReg(reg)}
-                            className="h-8 w-8 p-0 text-neutral-500 hover:text-primary-600 hover:bg-primary-50"
-                            title="修改資料"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                       </td>
-                       <td className="p-4 text-neutral-600 whitespace-nowrap">
-                         {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
-                       </td>
-                       {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
-                         <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
-                           {reg.data?.[f.id] || '-'}
-                         </td>
-                       ))}
-                     </tr>
-                   ))
-                 )}
-               </tbody>
+                  {sortedRegistrations.length === 0 ? (
+                    <tr>
+                      <td colSpan={(project.fields?.length || 0) + 1} className="p-10 text-center text-neutral-400">目前尚無報名資料</td>
+                    </tr>
+                  ) : (
+                    sortedRegistrations.map(reg => (
+                      <tr key={reg.id} className="hover:bg-primary-50/30 transition-colors">
+                        <td className="p-4 border-b border-neutral-100">
+                           <Button 
+                             variant="ghost" 
+                             size="sm"
+                             onClick={() => setEditingReg(reg)}
+                             className="h-8 w-8 p-0 text-neutral-500 hover:text-primary-600 hover:bg-primary-50"
+                             title="修改資料"
+                           >
+                             <Pencil className="w-4 h-4" />
+                           </Button>
+                        </td>
+                        <td className="p-4 text-neutral-600 whitespace-nowrap">
+                          {reg.created_at ? new Date(reg.created_at.seconds * 1000).toLocaleString() : '-'}
+                        </td>
+                        {(project.fields || []).filter(f => !['section_title', 'divider'].includes(f.type)).map(f => (
+                          <td key={f.id} className="p-4 text-neutral-800 font-medium max-w-[200px] truncate">
+                            {reg.data?.[f.id] || '-'}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  )}
+                </tbody>
              </table>
            </div>
          </CardContent>
