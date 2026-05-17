@@ -16,6 +16,9 @@ export default defineConfig({
         short_name: 'Events',
         description: 'Easy and fast event registration system',
         theme_color: '#ffffff',
+        scope: '/Event-Registration/',
+        start_url: '/Event-Registration/',
+        id: '/Event-Registration/',
         icons: [
           {
             src: 'pwa-192x192.png',
