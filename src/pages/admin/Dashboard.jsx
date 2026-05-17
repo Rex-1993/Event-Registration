@@ -36,8 +36,8 @@ function SortableProjectRow({ project, counts, onDelete, onCopy, onCopyLink, onT
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 10 : 1,
+    transition: isDragging ? 'none' : transition,
+    zIndex: isDragging ? 100 : 1,
     position: 'relative',
   };
 
@@ -45,7 +45,7 @@ function SortableProjectRow({ project, counts, onDelete, onCopy, onCopyLink, onT
     <div 
       ref={setNodeRef} 
       style={style} 
-      className={`group bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-xl mb-3 shadow-sm hover:shadow-md transition-all ${isDragging ? 'shadow-xl ring-2 ring-primary-500 opacity-90' : ''}`}
+      className={`group bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-xl mb-3 shadow-sm hover:shadow-md transition-[box-shadow,background-color,border-color] duration-200 ${isDragging ? 'shadow-xl ring-2 ring-primary-500 opacity-90' : ''}`}
     >
       <div className="flex items-center p-4 gap-4">
         {/* Drag Handle */}
@@ -152,8 +152,8 @@ export default function Dashboard() {
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
         activationConstraint: {
-            delay: 250, // Long press for touch
-            tolerance: 5,
+            delay: 150, // Snappier long press for touch (150ms)
+            tolerance: 6, // Slightly higher tolerance to prevent accidental cancellations
         },
     }),
     useSensor(KeyboardSensor, {
