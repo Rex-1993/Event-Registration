@@ -143,9 +143,9 @@ export default function ProjectDetails() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
-       <Link to="/admin/projects">
+       <Link to={project.deleted_at ? "/admin/trash" : "/admin/projects"}>
          <Button variant="outline" className="bg-gradient-to-r from-neutral-50 to-neutral-100 hover:from-neutral-100 hover:to-neutral-200 text-neutral-600 border-neutral-200 hover:border-neutral-300 transition-all">
-            <ArrowLeft className="w-4 h-4 mr-2" /> 返回問卷列表
+            <ArrowLeft className="w-4 h-4 mr-2" /> {project.deleted_at ? "返回回收桶" : "返回問卷列表"}
          </Button>
        </Link>
 
