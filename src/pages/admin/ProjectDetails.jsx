@@ -413,7 +413,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
         </div>
 
         <div className="p-4 border-t border-neutral-100 bg-neutral-50 flex justify-between items-center rounded-b-2xl">
-          <Button type="button" variant="ghost" onClick={handleDeleteClick} className="text-red-600 hover:bg-red-50 hover:text-red-700 font-medium">刪除這筆資料</Button>
+          <Button type="button" variant="outline" onClick={handleDeleteClick} className="border-red-200 hover:border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 font-medium rounded-lg">刪除這筆資料</Button>
           <div className="flex gap-3">
             <Button type="button" variant="outline" onClick={onClose}>取消</Button>
             <Button form="edit-form" type="submit" isLoading={saving} className="bg-primary-600 hover:bg-primary-700 text-white">儲存修改</Button>
