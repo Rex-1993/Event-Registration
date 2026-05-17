@@ -9,6 +9,7 @@ import ProjectDetails from "./pages/admin/ProjectDetails"
 import EventRegistration from "./pages/public/EventRegistration"
 import CheckRegistration from "./pages/public/CheckRegistration"
 import RegistrationSuccess from "./pages/public/RegistrationSuccess"
+import DialogContainer from "./components/DialogContainer"
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -20,6 +21,7 @@ const ProtectedRoute = ({ children }) => {
 export default function App() {
   return (
     <HashRouter>
+      <DialogContainer />
       <Routes>
         {/* Admin Routes */}
         <Route path="/admin/login" element={<Login />} />

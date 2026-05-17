@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react"
+import { dialog } from "../../lib/dialog"
 import { getProject, getRegistrations, deleteProject, updateRegistration, deleteRegistration } from "../../lib/api"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { Button } from "../../components/ui/Button"
@@ -39,8 +40,8 @@ export default function ProjectDetails() {
     loadData()
   }, [id])
 
-  const handleExport = () => {
-    if (!registrations.length) return alert("No data to export")
+  const handleExport = async () => {
+    if (!registrations.length) return await dialog.alert("目前沒有報名資料可供匯出！", "提示")
     
     // Flatten data for Excel
     const dataToExport = registrations.map(reg => {
@@ -72,12 +73,12 @@ export default function ProjectDetails() {
   }
 
   const handleDelete = async () => {
-    if (confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`)) {
+    if (await dialog.confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`, "確認刪除專案")) {
       try {
         await deleteProject(id)
         navigate("/admin/projects")
       } catch (error) {
-        alert("刪除專案時發生錯誤: " + error.message)
+        await dialog.alert("刪除專案時發生錯誤: " + error.message, "錯誤")
       }
     }
   }
@@ -86,7 +87,7 @@ export default function ProjectDetails() {
     await updateRegistration(regId, data, searchName)
     // Refresh local state
     setRegistrations(prev => prev.map(r => r.id === regId ? { ...r, data, search_name: searchName } : r))
-    alert("資料更新成功！")
+    await dialog.alert("資料更新成功！", "成功")
   }
 
   const handleDeleteRegistration = async (regId) => {
@@ -94,9 +95,9 @@ export default function ProjectDetails() {
       await deleteRegistration(regId)
       setRegistrations(prev => prev.filter(r => r.id !== regId))
       setEditingReg(null)
-      alert("資料已刪除")
+      await dialog.alert("資料已刪除", "成功")
     } catch (error) {
-      alert("刪除失敗: " + error.message)
+      await dialog.alert("刪除失敗: " + error.message, "錯誤")
     }
   }
 
@@ -323,8 +324,8 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
     setFormData(prev => ({ ...prev, [fieldId]: value }))
   }
 
-  const handleDeleteClick = () => {
-    if (confirm("是否確認刪除此筆資料？")) {
+  const handleDeleteClick = async () => {
+    if (await dialog.confirm("是否確認刪除此筆資料？", "確認刪除資料")) {
       onDelete(registration.id)
     }
   }
@@ -333,7 +334,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
     e.preventDefault()
     
     // Confirmation Dialog
-    if (!confirm("確定要修改這筆資料嗎？\n\n注意：此操作將直接覆蓋原始報名紀錄。")) {
+    if (!await dialog.confirm("確定要修改這筆資料嗎？\n\n注意：此操作將直接覆蓋原始報名紀錄。", "確認修改資料")) {
         return;
     }
 
@@ -346,7 +347,7 @@ function EditRegistrationModal({ isOpen, onClose, project, registration, onUpdat
       await onUpdate(registration.id, formData, searchName)
       onClose()
     } catch (error) {
-      alert("更新失敗: " + error.message)
+      await dialog.alert("更新失敗: " + error.message, "錯誤")
     } finally {
       setSaving(false)
     }

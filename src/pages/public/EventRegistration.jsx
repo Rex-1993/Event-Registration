@@ -10,6 +10,7 @@ import { Select } from "../../components/ui/Select"
 import { Textarea } from "../../components/ui/Textarea"
 import { Loader2, Search, Info, X, UserCheck } from "lucide-react"
 import BackgroundShapes from "../../components/ui/BackgroundShapes"
+import { dialog } from "../../lib/dialog"
 
 // Curve Generator Component
 function DynamicCurves({ color }) {
@@ -236,7 +237,7 @@ export default function EventRegistration() {
       await registerParticipant(id, formData)
       navigate("/success", { state: { projectTitle: project.title, projectId: id } })
     } catch (error) {
-      alert(error.message)
+      await dialog.alert(error.message, "報名失敗")
     } finally {
       setSubmitting(false)
     }

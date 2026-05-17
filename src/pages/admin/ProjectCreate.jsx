@@ -10,6 +10,7 @@ import FormBuilder from "../../components/admin/FormBuilder"
 import { Save, Trash2, LayoutTemplate } from "lucide-react"
 
 import { STANDARD_TEMPLATES } from "../../lib/templates"
+import { dialog } from "../../lib/dialog"
 
 export default function ProjectCreate() {
   const navigate = useNavigate()
@@ -39,7 +40,7 @@ export default function ProjectCreate() {
     }
   }, [])
 
-  const handleApplyTemplate = (key) => {
+  const handleApplyTemplate = async (key) => {
     if (!key) return
     
     let template = STANDARD_TEMPLATES[key]
@@ -48,7 +49,7 @@ export default function ProjectCreate() {
         template = customTemplates[key]
     }
 
-    if (template && confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
+    if (template && await dialog.confirm("這將會覆蓋目前的欄位設定。確定要繼續嗎？")) {
       setFormData(prev => ({
         ...prev,
         fields: JSON.parse(JSON.stringify(template.fields)) // Deep copy
@@ -56,8 +57,8 @@ export default function ProjectCreate() {
     }
   }
 
-  const handleSaveTemplate = () => {
-    const name = prompt("請輸入範本名稱:")
+  const handleSaveTemplate = async () => {
+    const name = await dialog.prompt("請輸入範本名稱:")
     if (!name) return
 
     const newTemplateId = `custom_${Date.now()}`
@@ -69,17 +70,17 @@ export default function ProjectCreate() {
     const updated = { ...customTemplates, [newTemplateId]: newTemplate }
     setCustomTemplates(updated)
     localStorage.setItem("customTemplates", JSON.stringify(updated))
-    alert("範本已儲存！")
+    await dialog.alert("範本已儲存！")
     setSelectedTemplate(newTemplateId)
   }
 
-  const handleDeleteTemplate = () => {
+  const handleDeleteTemplate = async () => {
     if (!selectedTemplate.startsWith("custom_")) {
-        alert("只能刪除自訂範本！")
+        await dialog.alert("只能刪除自訂範本！")
         return
     }
     
-    if (confirm("確定要刪除此範本嗎？")) {
+    if (await dialog.confirm("確定要刪除此範本嗎？")) {
         const updated = { ...customTemplates }
         delete updated[selectedTemplate]
         setCustomTemplates(updated)
@@ -95,7 +96,7 @@ export default function ProjectCreate() {
       await createProject(formData)
       navigate("/admin/projects")
     } catch (error) {
-      alert("建立專案時發生錯誤: " + error.message)
+      await dialog.alert("建立專案時發生錯誤: " + error.message)
     } finally {
       setLoading(false)
     }
