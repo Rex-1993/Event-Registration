@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { getProjects, deleteProject, createProject, getRegistrations, updateProjectOrder } from "../../lib/api"
 import { Button } from "../../components/ui/Button"
 import { Card, CardContent } from "../../components/ui/Card"
-import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon, GripVertical } from "lucide-react"
+import { Plus, Users, Calendar, ArrowRight, Trash2, Edit, Copy, Link as LinkIcon, GripVertical, Pin } from "lucide-react"
 import {
   DndContext, 
   closestCenter,
@@ -24,7 +24,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-function SortableProjectRow({ project, counts, onDelete, onCopy, onCopyLink }) {
+function SortableProjectRow({ project, counts, onDelete, onCopy, onCopyLink, onTogglePin }) {
   const {
     attributes,
     listeners,
@@ -80,6 +80,15 @@ function SortableProjectRow({ project, counts, onDelete, onCopy, onCopyLink }) {
 
              {/* Actions */}
              <div className="md:col-span-4 flex items-center md:justify-end gap-2">
+                <Button 
+                   variant="ghost" 
+                   size="icon" 
+                   onClick={(e) => onTogglePin(e, project)}
+                   className={`h-9 w-9 transition-all duration-300 ${project.is_pinned ? "text-orange-500 bg-orange-50 hover:bg-orange-100 border border-orange-200 rotate-45 scale-105 shadow-sm" : "text-neutral-400 hover:text-orange-500 hover:bg-orange-50 hover:rotate-45"}`}
+                   title={project.is_pinned ? "解除固定 (已固定保護)" : "固定此專案 (防誤刪)"}
+                >
+                   <Pin className={`w-4 h-4 ${project.is_pinned ? "fill-orange-500" : ""}`} />
+                </Button>
                 <Button 
                    variant="ghost" 
                    size="icon" 
@@ -201,9 +210,28 @@ export default function Dashboard() {
     }
   }
 
+  const handleTogglePin = async (e, project) => {
+    e.preventDefault()
+    e.stopPropagation()
+    try {
+      const nextPinned = !project.is_pinned
+      await updateProject(project.id, { is_pinned: nextPinned })
+      setProjects(prev => prev.map(p => p.id === project.id ? { ...p, is_pinned: nextPinned } : p))
+    } catch (error) {
+      await dialog.alert("設定專案固定狀態時發生錯誤: " + error.message, "錯誤")
+    }
+  }
+
   const handleDelete = async (e, id, title) => {
     e.preventDefault()
     e.stopPropagation()
+    
+    const project = projects.find(p => p.id === id)
+    if (project && project.is_pinned) {
+      await dialog.alert(`專案「${title}」目前處於受保護狀態，無法被刪除。請先點擊圖釘按鈕解除固定狀態。`, "專案保護中")
+      return
+    }
+
     if (await dialog.confirm(`確定要刪除專案「${title}」嗎？此動作無法復原。`, "確認刪除專案")) {
       try {
         await deleteProject(id)
@@ -289,6 +317,7 @@ export default function Dashboard() {
                             onDelete={handleDelete}
                             onCopy={handleCopy}
                             onCopyLink={handleCopyLink}
+                            onTogglePin={handleTogglePin}
                         />
                     ))}
                 </div>

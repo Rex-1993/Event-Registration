@@ -73,6 +73,11 @@ export default function ProjectDetails() {
   }
 
   const handleDelete = async () => {
+    if (project && project.is_pinned) {
+      await dialog.alert(`專案「${project.title}」目前處於受保護狀態，無法被刪除。請先回到問卷管理解除圖釘固定。`, "專案保護中")
+      return
+    }
+
     if (await dialog.confirm(`確定要刪除專案「${project.title}」嗎？此動作無法復原。`, "確認刪除專案")) {
       try {
         await deleteProject(id)
